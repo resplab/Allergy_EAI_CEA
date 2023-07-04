@@ -4,23 +4,32 @@ library(diagram)
 
 
 par_hiv<-define_parameters(
+  age_initial = 20,
+  sex = 0,
+  age = age_initial + markov_cycle,
+  sex_cat = ifelse(sex == 0, "FMLE", "MLE"),
+  mr = get_who_mr(age,sex_cat, country = "CAN")
+)
+
+par_hiv<-modify ( par_hiv,
   p_AB_mono = 0.202,
   p_AC_mono = 0.067,
-  p_AD_mono= 0.010,
+  p_AD_mono= 0.010 +mr,
   p_BC_mono= 0.407,
-  p_BD_mono = 0.012,
-  p_CD_mono =0.25
+  p_BD_mono = 0.012 +mr,
+  p_CD_mono =0.25 +mr
 )
 
 par_hiv<-modify(
   par_hiv,
   p_AB_comb =p_AB_mono *0.509,
   p_AC_comb =p_AC_mono *0.509,
-  p_AD_comb=p_AD_mono * 0.509,
+  p_AD_comb=(p_AD_mono -mr) * 0.509,
   p_BC_comb =p_BC_mono *0.509,
-  p_BD_comb = p_BD_mono *0.509,
-  p_CD_comb =p_CD_mono*0.509
+  p_BD_comb = (p_BD_mono -mr) *0.509,
+  p_CD_comb =(p_CD_mono -mr)*0.509
 )
+
 
 par_hiv <-modify(
   par_hiv,
