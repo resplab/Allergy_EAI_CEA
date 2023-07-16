@@ -4,7 +4,7 @@ library(diagram)
 
 
 # import the Canada 2020 life table with mortality value in all ages (both sex)
-life_table_file<-"https://raw.githubusercontent.com/resplab/Allergy_EAI_CEA/main/life_table_CAN_2020.csv?token=GHSAT0AAAAAACEEFFHVDD2YTSKDPOFY57XWZFTRCNA"
+life_table_file<-"https://raw.githubusercontent.com/resplab/Allergy_EAI_CEA/main/life_table_CAN_2020.csv?token=GHSAT0AAAAAACFEZCOTKK3X7KTAOYOKIKI4ZFTS7WQ"
 life_table_CAN_2020<-read.csv(life_table_file)
 
 life_table1<-life_table_CAN_2020 %>%
