@@ -1,6 +1,9 @@
 library(tidyverse)
 library(heemod)
 library(diagram)
+library(ggplot2)
+
+install.packages("heemod")
 
 
 # import the Canada 2020 life table with mortality value in all ages (both sex)
@@ -19,7 +22,7 @@ life_table_clean$Age<-as.numeric((life_table_clean$Age))
 
 #calculate daily death probability
 life_table_clean<-life_table_clean %>% mutate(fatality_daily = rescale_prob(p = VALUE, from = 365 ))
-
+ life_table_clean
 
 #build age parameter,
 par_allerg <-define_parameters(
@@ -51,7 +54,7 @@ p_sED_faf = rescale_prob(p=0.000002,from = 365), #transition from ED to food all
 p_ns_sED_ED= rescale_prob( p = 0.087, from = 365), #ED transfer matrix: transition from non-severe to ED
 p_sh_faf= 0.0045,#transition from hospitalization to food allergy fatality
 acm = look_up(data = life_table3, Age = age, value = "fatality_daily"), #daily based all-case mortality
-dr=0.015
+dr=rescale_prob( p =0.015, from = 365)
   )
 
 
@@ -209,10 +212,8 @@ allergy_mod<-run_model(
   cycles = 7300,
   cost = cost_total,
   effect = utility
-  )
+)
 
 plot(allergy_mod)
-
-summary(allergy_mod)
 
 
