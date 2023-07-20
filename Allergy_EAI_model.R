@@ -7,16 +7,18 @@ library(diagram)
 
 life_table<-read.csv('./life_table_CAN_2020.csv')
 
-life_table1<-life_table_CAN_2020 %>%
+#remove row 111 from life_table (age older than 111 )
+life_table<- life_table[-111,]
+life_table_seperate_unit<-life_table %>%
   separate(Age.group, into = c("Age", "Unit"), sep = " ")
  
 #clean lifetable
-life_table2 <- select (life_table1, Age, VALUE)
+life_table_clean <- select (life_table_seperate_unit, Age, VALUE)
+life_table_clean<-as.data.frame(life_table_clean)
+life_table_clean$Age<-as.numeric((life_table_clean$Age))
 
-life_table3<-as.data.frame(life_table2)
-life_table3$Age<-as.numeric((life_table3$Age))
 #calculate daily death probability
-life_table3<-life_table3 %>% mutate(fatality_daily = rescale_prob(p = VALUE, from = 365 ))
+life_table_clean<-life_table_clean %>% mutate(fatality_daily = rescale_prob(p = VALUE, from = 365 ))
 
 
 #build age parameter,
@@ -40,20 +42,18 @@ par_allerg <-define_parameters(
 
 par_allerg<-modify(
 par_allerg,
-p_ns_ar = 0.017, # transition from non-severe reaction to food allergy remission
-p_ns_sw_ww =0.074820, # watch and wait matrix-transition from non-severe reaction to severe reaction watch and wait
-p_ns_sED_ww = 0.01218, # watch and wait matrix-transition from non-severe reaction to severe reaction transfer to ED 
-p_sw_faf = 0.00002, # Transition from watch and wait to food allergy fatality
+p_ns_ar = rescale_prob( p = 0.017,from = 365), # transition from non-severe reaction to food allergy remission
+p_ns_sw_ww = rescale_prob( p =0.074820,from = 365), # watch and wait matrix-transition from non-severe reaction to severe reaction watch and wait
+p_ns_sED_ww = rescale_prob(p = 0.01218, from = 365), # watch and wait matrix-transition from non-severe reaction to severe reaction transfer to ED 
+p_sw_faf = rescale_prob(p = 0.00002, from = 365), # Transition from watch and wait to food allergy fatality
 p_sED_sh = 0.12, #transition from ED to hospitalization 
-p_sED_faf = 0.000002, #transition from ED to food allergy fatality
-p_ns_sED_ED=0.087, #ED transfer matrix: transition from non-severe to ED
+p_sED_faf = rescale_prob(p=0.000002,from = 365), #transition from ED to food allergy fatality
+p_ns_sED_ED= rescale_prob( p = 0.087, from = 365), #ED transfer matrix: transition from non-severe to ED
 p_sh_faf= 0.0045,#transition from hospitalization to food allergy fatality
 acm = look_up(data = life_table3, Age = age, value = "fatality_daily"), #daily based all-case mortality
 dr=0.015
   )
 
-life_table3
-look_up
 
 #transition matrix for watch and wait
 Transition_watch <- define_transition(
@@ -126,7 +126,7 @@ state_sED<- define_state(
   medical_cost =1254, 
   medical_cost_ED = 331,
   ambulance_cost = 848,
-  treatment_cost = 102,
+  treatment_cost = 0.8,
   medical_cost_hospitalized =0,
   utility =0.83,
   cost_total = discount(medical_cost + medical_cost_ED + ambulance_cost+ treatment_cost,r=dr),
@@ -137,16 +137,15 @@ state_sED<- define_state(
 
 state_sh<-define_state(
   remission_cost= 0,
-  medical_cost =1254, 
-  medical_cost_hospitalized = 1866,
+  medical_cost = 0,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
+  medical_cost_hospitalized =1866,
   utility = 0.83,
-  cost_total = discount(medical_cost + medical_cost_hospitalized,r=dr),
+  cost_total = discount(medical_cost_hospitalized,r=dr),
   utility_total = discount(utility, r=dr)
 )
-
 
 
 #cost -food allergy fatality
@@ -207,7 +206,7 @@ allergy_mod<-run_model(
   watch_wait = strategy_watch,
   ED_transfer = strategy_ED,
   init = c(0,10000,0,0,0,0,0),
-  cycles = 7300, #20*365
+  cycles = 7300,
   cost = cost_total,
   effect = utility
   )
