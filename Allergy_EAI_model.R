@@ -37,7 +37,7 @@ par_allerg <-define_parameters(
 #ar: food allergy remission, 
 #faf: food allergy fatality,
 #dr: discount rate
-#mr: all-cause mortality
+#acm: all-cause mortality
 
 
 par_allerg<-modify(
@@ -57,7 +57,7 @@ dr=0.015
 
 #transition matrix for watch and wait
 Transition_watch <- define_transition(
-  state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_mr"),
+  state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
   C,0,0,0,0,0,acm,
   p_ns_ar,C,p_ns_sw_ww,p_ns_sED_ww,0,0,acm,
   0,C,0,0,0,p_sw_faf,acm,
@@ -70,7 +70,7 @@ Transition_watch <- define_transition(
 
 #transition matrix for ED transfer 
 Transition_ED <- define_transition(
-  state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_mr"),
+  state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
   C,0,0,0,0,0,acm,
   p_ns_ar,C,0,p_ns_sED_ED,0,0,acm,
   0,0,0,0,0,1,0,
@@ -82,7 +82,7 @@ Transition_ED <- define_transition(
 
 #cost for food allergy remission 
 state_ar<-define_state(
-  remission_cost= 513,
+  remission_cost= 513/365,
   medical_cost = 0,
   treatment_cost = 0,
   ambulance_cost = 0,
@@ -96,7 +96,7 @@ state_ar<-define_state(
 #Cost- non-severe reaction
 state_ns<-define_state(
   remission_cost= 0,
-  medical_cost = 1254,
+  medical_cost = 1254/365,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
@@ -109,7 +109,7 @@ state_ns<-define_state(
 #Cost- severe allergic reaction-watch and waiting 
 state_sw<-define_state(
   remission_cost= 0,
-  medical_cost = 1254,
+  medical_cost = 1254/365,
   treatment_cost = 95,
   ambulance_cost = 0,
   medical_cost_ED = 0,
@@ -123,7 +123,7 @@ state_sw<-define_state(
 #medical cost =direct cost of food allergy/year+ED medical cost
 state_sED<- define_state(
   remission_cost= 0,
-  medical_cost =1254, 
+  medical_cost = 1254/365, 
   medical_cost_ED = 331,
   ambulance_cost = 848,
   treatment_cost = 0.8,
@@ -163,7 +163,7 @@ state_faf<-define_state(
 )
 
 #cost - all-cause mortality
-state_mr<-define_state(
+state_acm<-define_state(
   remission_cost= 0,
   medical_cost =0, 
   medical_cost_hospitalized = 0,
@@ -184,7 +184,7 @@ strategy_watch<- define_strategy(
   state_sED = state_sED,
   state_sh = state_sh,
   state_faf = state_faf,
-  state_mr = state_mr
+  state_acm = state_acm
 )
 
 
@@ -197,7 +197,7 @@ strategy_ED<-define_strategy(
   state_sED = state_sED,
   state_sh = state_sh,
   state_faf = state_faf,
-  state_mr = state_mr
+  state_acm = state_acm
 )
 
 
@@ -214,4 +214,5 @@ allergy_mod<-run_model(
 plot(allergy_mod)
 
 summary(allergy_mod)
+
 
