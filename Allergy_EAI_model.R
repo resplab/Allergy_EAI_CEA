@@ -3,7 +3,6 @@ library(heemod)
 library(diagram)
 library(ggplot2)
 
-install.packages("heemod")
 
 
 # import the Canada 2020 life table with mortality value in all ages (both sex)
@@ -70,6 +69,8 @@ Transition_watch <- define_transition(
   0,0,0,0,0,0,1
 )
 
+p_sED_faf
+p_sw_faf
 
 #transition matrix for ED transfer 
 Transition_ED <- define_transition(
@@ -215,5 +216,17 @@ allergy_mod<-run_model(
 )
 
 plot(allergy_mod)
+plot(allergy_mod, states = c("state_faf" )) #plot for food allergy fatality
+
+plot(allergy_mod, states = c("state_sh")) #plot for hospitalization 
+plot(allergy_mod, states = c("state_sED")) # plot for 
+plot(allergy_mod, states = c("state_sw"))
+plot(allergy_mod,states = c("state_ns"))
+plot(allergy_mod, states = c("state_ar"))
+
+
+
+
+summary(allergy_mod)
 
 
