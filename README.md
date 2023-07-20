@@ -4,6 +4,7 @@ Cost-effectiveness of watchful waiting vs immediate ED transfer after epinephrin
 
 ## Allergey_EAI_model.R
 Allergy R model 
+072023: daily probability used
 
 ## life_table_CAN_2020.cvs 
 Death probability between year and year +1 (2020 data), for all ages, all sex
