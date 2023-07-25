@@ -37,13 +37,14 @@ par_allerg <-define_parameters(
 par_allerg<-modify(
 par_allerg,
 p_ns_ar = rescale_prob(p = 0.017, from = 365), # transition from non-severe reaction to food allergy remission
-p_ns_sw_ww = rescale_prob(p =0.074820, from = 365), # non-severe reaction to severe reaction for watch and wait
-p_ns_sED_ww = rescale_prob(p = 0.01218, from = 365), # non-severe reaction to severe reaction transfer to ED for watch and wait
+p_ns_sw_ww = (1-0.14) * rescale_prob(p =0.087, from = 365) , # non-severe reaction to severe reaction for watch and wait
+p_ns_sED_ww =  0.14 * rescale_prob(p =0.087, from = 365), # non-severe reaction to severe reaction transfer to ED for watch and wait
+p_sw_sh = 0.121, #transition from severe reaction for watch and wait to hospitalization 
 p_sw_faf = rescale_prob(p = 0.00002, from = 365), # Watch and wait to food allergy fatality
-p_sED_sh = 0.12, #transition from ED to hospitalization 
+p_sED_sh = 0.121, #transition from ED to hospitalization 
 p_sED_faf = rescale_prob(p = 0.000002, from = 365), # transition from ED to food allergy fatality
-p_ns_sED_ED= rescale_prob(p = 0.087, from = 365), # transition from non-severe to ED
-p_sh_faf= 0.0045,# transition from hospitalization to food allergy fatality
+p_ns_sED_ED= rescale_prob(p =0.087, from = 365), # transition from non-severe to ED
+p_sh_faf= 0.0045,# transition from hospitalization to food allergy fatality # old value 0.0045 
 acm = look_up(data = life_table, Age = age, value = "fatality_daily"), #daily all-cause mortality
 dr=rescale_prob( p=0.015, from = 365)
   )
@@ -54,7 +55,7 @@ Transition_watch <- define_transition(
   state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
   C,          0,     0,          0,           0,        0,         acm,
   p_ns_ar,    C,     p_ns_sw_ww, p_ns_sED_ww, 0,        0,         acm,
-  0,          C,     0,          0,           0,        p_sw_faf,  acm,
+  0,          C,     0,          0,           p_sw_sh,  p_sw_faf,  acm,
   0,          C,     0,          0,           p_sED_sh, p_sED_faf, acm,
   0,          C,     0,          0,           0,        p_sh_faf,  acm,
   0,          0,     0,          0,           0,        1,           0,
@@ -223,10 +224,11 @@ tmp %>%
   group_by(.strategy_names, state_names) %>% 
   summarise(avg=mean(count), sum=sum(count))
 
+summary(allergy_mod)
 
-plot(allergy_mod, states = c("state_faf" )) #plot for food allergy fatality
-plot(allergy_mod, states = c("state_sh")) #plot for hospitalization 
-plot(allergy_mod, states = c("state_sED")) # plot for 
+plot(allergy_mod, states = c("state_faf" )) 
+plot(allergy_mod, states = c("state_sh")) 
+plot(allergy_mod, states = c("state_sED")) 
 plot(allergy_mod, states = c("state_sw"))
 plot(allergy_mod,states = c("state_ns"))
 plot(allergy_mod, states = c("state_ar"))
@@ -234,5 +236,7 @@ plot(allergy_mod, states = c("state_ar"))
 
 
 summary(allergy_mod)
+
+rescale_prob
 
 
