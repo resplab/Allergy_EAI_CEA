@@ -125,9 +125,9 @@ state_sw<-define_state(
 state_sED<- define_state(
   remission_cost= 0,
   medical_cost = 1254/365, 
-  medical_cost_ED = 331,
-  ambulance_cost = 848,
   treatment_cost = 0.8,
+  ambulance_cost = 848,
+  medical_cost_ED = 331,
   medical_cost_hospitalized =0,
   utility =0.83,
   cost_total = discount(medical_cost + medical_cost_ED + ambulance_cost+ treatment_cost, r=dr),
