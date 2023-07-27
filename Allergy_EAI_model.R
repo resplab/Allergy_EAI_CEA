@@ -14,13 +14,17 @@ life_table <- life_table %>%
                 separate(Age.group, into = c("Age", "Unit"), sep = " ") %>% 
                 select(Age, VALUE) %>% 
                 mutate(Age=as.numeric(Age), fatality_daily = rescale_prob(p = VALUE, from = 365 ))
- 
+
+
+  
 #build age parameter,
 par_allerg <-define_parameters(
                   age_initial = 1,
                   age = floor(age_initial + markov_cycle/365)
 )
 
+ar_age<-function(age) {if_else(age <=6, rescale_prob(0.058,from = 365), 0)
+}
 
 #_ww: watch and wait scenario
 #_ED: transfer to ED scenario 
@@ -36,34 +40,19 @@ par_allerg <-define_parameters(
 
 par_allerg<-modify(
 par_allerg,
-p_ns_ar = rescale_prob(p = 0.017, from = 365), # transition from non-severe reaction to food allergy remission
+p_ns_ar = ar_age(age = age) , # transition from non-severe reaction to food allergy remission
 p_ns_sw_ww = (1-0.14) * rescale_prob(p =0.087, from = 365) , # non-severe reaction to severe reaction for watch and wait
 p_ns_sED_ww =  0.14 * rescale_prob(p =0.087, from = 365), # non-severe reaction to severe reaction transfer to ED for watch and wait
-p_sw_sh = 0.121, #transition from severe reaction for watch and wait to hospitalization 
+p_sw_sh = rescale_prob(p = 0.095, from=365*5), #transition from severe reaction for watch and wait to hospitalization 
 p_sw_faf = rescale_prob(p = 0.00002, from = 365), # Watch and wait to food allergy fatality
-p_sED_sh = 0.121, #transition from ED to hospitalization 
+p_sED_sh_ww= rescale_prob(p=0.151, from = 365*5), #transition from ED to hospitalization for watch and wait
+p_sED_sh_ED= rescale_prob(p=0.54*0.095 +0.46*0.151, from = 365*5), #transition from ED to hospitalization for ED transfer
 p_sED_faf = rescale_prob(p = 0.000002, from = 365), # transition from ED to food allergy fatality
 p_ns_sED_ED= rescale_prob(p =0.087, from = 365), # transition from non-severe to ED
-p_sh_faf= 0.0045,# transition from hospitalization to food allergy fatality # old value 0.0045 
+p_sh_faf= rescale_prob( p = 0.0045, from= 365), # transition from hospitalization to food allergy fatality # old value 0.0045 
 acm = look_up(data = life_table, Age = age, value = "fatality_daily"), #daily all-cause mortality
 dr=rescale_prob( p=0.015, from = 365)
   )
-
-
-#transition matrix for watch and wait
-Transition_watch <- define_transition(
-  state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
-  C,          0,     0,          0,           0,        0,         acm,
-  p_ns_ar,    C,     p_ns_sw_ww, p_ns_sED_ww, 0,        0,         acm,
-  0,          C,     0,          0,           p_sw_sh,  p_sw_faf,  acm,
-  0,          C,     0,          0,           p_sED_sh, p_sED_faf, acm,
-  0,          C,     0,          0,           0,        p_sh_faf,  acm,
-  0,          0,     0,          0,           0,        1,           0,
-  0,          0,     0,          0,           0,        0,           1
-)
-
-Transition_watch
-plot(Transition_watch)
 
 #transition matrix for ED transfer 
 Transition_ED <- define_transition(
@@ -71,14 +60,24 @@ Transition_ED <- define_transition(
   C,            0,      0,           0,       0,         0,      acm,
   p_ns_ar,      C,      0, p_ns_sED_ED,       0,         0,      acm,
   0,            0,      0,           0,       0,         1,        0,
-  0,            C,      0,           0,p_sED_sh, p_sED_faf,      acm,
+  0,            C,      0,           0,p_sED_sh_ED, p_sED_faf,      acm,
   0,            C,      0,           0,       0,  p_sh_faf,      acm,
   0,            0,      0,           0,       0,         1,        0,
   0,            0,      0,           0,       0,         0,        1
 )
 
-Transition_ED
-plot(Transition_ED)
+#transition matrix for watch and wait
+Transition_watch <- define_transition(
+  state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
+  C,          0,     0,          0,           0,        0,         acm,
+  p_ns_ar,    C,     p_ns_sw_ww, p_ns_sED_ww, 0,        0,         acm,
+  0,          C,     0,          0,           p_sw_sh,  p_sw_faf,  acm,
+  0,          C,     0,          0,           p_sED_sh_ww, p_sED_faf, acm,
+  0,          C,     0,          0,           0,        p_sh_faf,  acm,
+  0,          0,     0,          0,           0,        1,           0,
+  0,          0,     0,          0,           0,        0,           1
+)
+
 
 
 # food allergy remission 
@@ -130,7 +129,7 @@ state_sED<- define_state(
   medical_cost_ED = 331,
   medical_cost_hospitalized =0,
   utility =0.83,
-  cost_total = discount(medical_cost + medical_cost_ED + ambulance_cost+ treatment_cost, r=dr),
+  cost_total = discount(medical_cost + treatment_cost + ambulance_cost + medical_cost_ED , r=dr),
   utility_total = discount(utility, r=dr)
 )
 
@@ -174,6 +173,16 @@ state_acm<-define_state(
   utility_total = 0
 )
 
+strategy_ED<-define_strategy(
+  transition = Transition_ED,
+  state_ar = state_ar,
+  state_ns = state_ns,
+  state_sw = state_sw,
+  state_sED = state_sED,
+  state_sh = state_sh,
+  state_faf = state_faf,
+  state_acm = state_acm
+)
 
 strategy_watch<- define_strategy(
   transition = Transition_watch,
@@ -188,17 +197,6 @@ strategy_watch<- define_strategy(
 
 
 
-strategy_ED<-define_strategy(
-  transition = Transition_ED,
-  state_ar = state_ar,
-  state_ns = state_ns,
-  state_sw = state_sw,
-  state_sED = state_sED,
-  state_sh = state_sh,
-  state_faf = state_faf,
-  state_acm = state_acm
-)
-
 time0 <- define_init(state_ar = 0,
                      state_ns = 10000,
                      state_sw = 0,
@@ -209,8 +207,8 @@ time0 <- define_init(state_ar = 0,
 
 allergy_mod<-run_model(
                 parameters = par_allerg,
-                watch_wait = strategy_watch,
                 ED_transfer = strategy_ED,
+                watch_wait = strategy_watch,
                 init = time0,
                 cycles = 20*365,
                 cost = cost_total,
@@ -224,7 +222,10 @@ tmp %>%
   group_by(.strategy_names, state_names) %>% 
   summarise(avg=mean(count), sum=sum(count))
 
-summary(allergy_mod)
+
+summary(allergy_mod,
+        threshold = c(50000,100000))
+
 
 plot(allergy_mod, states = c("state_faf" )) 
 plot(allergy_mod, states = c("state_sh")) 
@@ -233,6 +234,7 @@ plot(allergy_mod, states = c("state_sw"))
 plot(allergy_mod,states = c("state_ns"))
 plot(allergy_mod, states = c("state_ar"))
 
+get_counts(allergy_mod)
 
 
 summary(allergy_mod)
