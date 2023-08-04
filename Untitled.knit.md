@@ -8,10 +8,53 @@ editor: visual
 ## Build the allergy model
 
 
-```{r}
+::: {.cell}
+
+```{.r .cell-code}
 library(tidyverse)
+```
+
+::: {.cell-output .cell-output-stderr}
+```
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+```
+:::
+
+```{.r .cell-code}
 library(heemod)
+```
+
+::: {.cell-output .cell-output-stderr}
+```
+
+Attaching package: 'heemod'
+
+The following object is masked from 'package:purrr':
+
+    modify
+```
+:::
+
+```{.r .cell-code}
 library(diagram)
+```
+
+::: {.cell-output .cell-output-stderr}
+```
+Loading required package: shape
+```
+:::
+
+```{.r .cell-code}
 library(ggplot2)
 
 # import the Canada 2020 life table with mortality value in all ages (both sex)
@@ -32,7 +75,18 @@ par_allerg <-define_parameters(
                   age_initial = 1,
                   age = floor(age_initial + markov_cycle/365)
 )
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+Warning: markov_cycle was deprecated in heemod 0.16.0.
+ℹ Please use model_time instead.
+ℹ The deprecated feature was likely used in the base package.
+  Please report the issue to the authors.
+```
+:::
+
+```{.r .cell-code}
 #age-dependent remission probability
 ar_age<-function(age) {if_else(age <=6, rescale_prob(0.058,from = 365), 0) 
 }
@@ -229,14 +283,63 @@ allergy_mod<-run_model(
 )
 
 summary(allergy_mod)
-
 ```
+
+::: {.cell-output .cell-output-stdout}
+```
+2 strategies run for 7300 cycles.
+
+Initial state counts:
+
+state_ar = 0
+state_ns = 10000
+state_sw = 0
+state_sED = 0
+state_sh = 0
+state_faf = 0
+state_acm = 0
+
+Counting method: 'life-table'.
+
+ 
+
+Counting method: 'beginning'.
+
+ 
+
+Counting method: 'end'.
+
+Values:
+
+            remission_cost medical_cost treatment_cost ambulance_cost
+ED_transfer       26493823    185606734       701600.3       11419521
+watch_wait        26493823    185606727      1198430.2        1598733
+            medical_cost_ED medical_cost_hospitalized  utility cost_total
+ED_transfer       4457383.7                   3040137 67233340  200801624
+watch_wait         624033.7                   3040137 67233338  189363793
+            utility_total
+ED_transfer      58026195
+watch_wait       58026193
+
+Efficiency frontier:
+
+watch_wait -> ED_transfer
+
+Differences:
+
+            Cost Diff. Effect Diff.    ICER       Ref.
+ED_transfer   1143.783 0.0002006633 5700011 watch_wait
+```
+:::
+:::
 
 
 ## Calculate the reference cost_per_year_saved value
 
 
-```{r}
+::: {.cell}
+
+```{.r .cell-code}
 value<-get_values(allergy_mod)
 
 tmp <- get_counts(allergy_mod)
@@ -244,13 +347,83 @@ tmp <- get_counts(allergy_mod)
 tmp %>%   
   group_by(.strategy_names, state_names) %>% 
   summarize(avg=mean(count), sum=sum(count))
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+`summarise()` has grouped output by '.strategy_names'. You can override using
+the `.groups` argument.
+```
+:::
+
+::: {.cell-output .cell-output-stdout}
+```
+# A tibble: 14 × 4
+# Groups:   .strategy_names [2]
+   .strategy_names state_names      avg       sum
+   <chr>           <chr>          <dbl>     <dbl>
+ 1 ED_transfer     state_acm     13.1      95697.
+ 2 ED_transfer     state_ar    2582.    18850381.
+ 3 ED_transfer     state_faf      3.84     28005.
+ 4 ED_transfer     state_ns    7399.    54010822.
+ 5 ED_transfer     state_sED      1.84     13466.
+ 6 ED_transfer     state_sh       0.223     1629.
+ 7 ED_transfer     state_sw       0            0 
+ 8 watch_wait      state_acm     13.1      95697.
+ 9 watch_wait      state_ar    2582.    18850381.
+10 watch_wait      state_faf      3.84     28007.
+11 watch_wait      state_ns    7399.    54010820.
+12 watch_wait      state_sED      0.258     1885.
+13 watch_wait      state_sh       0.223     1629.
+14 watch_wait      state_sw       1.59     11581.
+```
+:::
+
+```{.r .cell-code}
 value_summary<-value %>%   
   group_by(.strategy_names, value_names) %>% 
       summarize(sum=sum(value)) 
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+`summarise()` has grouped output by '.strategy_names'. You can override using
+the `.groups` argument.
+```
+:::
+
+```{.r .cell-code}
 print(value_summary)
+```
 
+::: {.cell-output .cell-output-stdout}
+```
+# A tibble: 18 × 3
+# Groups:   .strategy_names [2]
+   .strategy_names value_names                      sum
+   <chr>           <chr>                          <dbl>
+ 1 ED_transfer     ambulance_cost             11419521.
+ 2 ED_transfer     cost_total                200801624.
+ 3 ED_transfer     medical_cost              185606734.
+ 4 ED_transfer     medical_cost_ED             4457384.
+ 5 ED_transfer     medical_cost_hospitalized   3040137.
+ 6 ED_transfer     remission_cost             26493823.
+ 7 ED_transfer     treatment_cost               701600.
+ 8 ED_transfer     utility                    67233340.
+ 9 ED_transfer     utility_total              58026195.
+10 watch_wait      ambulance_cost              1598733.
+11 watch_wait      cost_total                189363793.
+12 watch_wait      medical_cost              185606727.
+13 watch_wait      medical_cost_ED              624034.
+14 watch_wait      medical_cost_hospitalized   3040137.
+15 watch_wait      remission_cost             26493823.
+16 watch_wait      treatment_cost              1198430.
+17 watch_wait      utility                    67233338.
+18 watch_wait      utility_total              58026193.
+```
+:::
+
+```{.r .cell-code}
 # calculate cost difference between ED transfer and watch and wait in allergy model 
 cost_diff_refer <- value_summary$sum[value_summary$.strategy_names == "ED_transfer" & value_summary$value_names == "cost_total"] -
                         value_summary$sum[value_summary$.strategy_names == "watch_wait" & value_summary$value_names == "cost_total"] 
@@ -265,6 +438,13 @@ cost_per_year_life_saved_ref<-cost_diff_refer/utility_diff_refer
 print(cost_per_year_life_saved_ref)
 ```
 
+::: {.cell-output .cell-output-stdout}
+```
+[1] 5700011
+```
+:::
+:::
+
 
 ## Sensitivity analysis
 
@@ -275,7 +455,9 @@ print(cost_per_year_life_saved_ref)
 1.  **sensitivity analysis parameter with food allergically fatality X100 for watch and wait**
 
 
-```{r}
+::: {.cell}
+
+```{.r .cell-code}
 allergy_sa_100<-define_dsa(
   p_ns_ar, ar_age(age = age)*0.8, ar_age(age = age) *1.2,
   p_sh, 0.121 *0.8,0.121 *1.2,
@@ -293,7 +475,21 @@ allergy_dsa_100 <-run_dsa(
   model = allergy_mod,
   dsa = allergy_sa_100
 )
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+Running DSA on strategy 'ED_transfer'...
+```
+:::
+
+::: {.cell-output .cell-output-stderr}
+```
+Running DSA on strategy 'watch_wait'...
+```
+:::
+
+```{.r .cell-code}
 #draw tornado graph, category boundary into low and high 
 allergy_dsa_100_data<-as.data.frame(allergy_dsa_100$dsa)
 
@@ -308,7 +504,16 @@ allergy_dsa_100_gd<-allergy_dsa_100_clean %>%
  summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
    effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
   mutate(cost_per_year_life_saved = cost_diff/effect_diff)
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+`summarise()` has grouped output by '.par_names', '.par_value'. You can
+override using the `.groups` argument.
+```
+:::
+
+```{.r .cell-code}
 allergy_dsa_100_tor<- ggplot(allergy_dsa_100_gd, aes(
   y = .par_names,
   yend=.par_names,
@@ -320,14 +525,20 @@ allergy_dsa_100_tor<- ggplot(allergy_dsa_100_gd, aes(
   theme(plot.title = element_text(hjust = 0.5))
 
 print(allergy_dsa_100_tor)
-
 ```
+
+::: {.cell-output-display}
+![](Untitled_files/figure-html/unnamed-chunk-3-1.png){width=672}
+:::
+:::
 
 
 **2. sensitivity analysis parameter with food allergically fatality X500 for watch and wait**
 
 
-```{r}
+::: {.cell}
+
+```{.r .cell-code}
 allergy_sa_500<-define_dsa(
   p_ns_ar, ar_age(age = age)*0.8, ar_age(age = age) *1.2,
   p_sh, 0.121 *0.8,0.121 *1.2,
@@ -344,8 +555,21 @@ allergy_dsa_500 <-run_dsa(
   model = allergy_mod,
   dsa = allergy_sa_500
 )
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+Running DSA on strategy 'ED_transfer'...
+```
+:::
 
+::: {.cell-output .cell-output-stderr}
+```
+Running DSA on strategy 'watch_wait'...
+```
+:::
+
+```{.r .cell-code}
 allergy_dsa_500_data<-as.data.frame(allergy_dsa_500$dsa)
 
 allergy_dsa_500_clean<-allergy_dsa_500_data %>%
@@ -359,7 +583,16 @@ allergy_dsa_500_gd<-allergy_dsa_500_clean %>%
   summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
              effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
   mutate(cost_per_year_life_saved = cost_diff/effect_diff)
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+`summarise()` has grouped output by '.par_names', '.par_value'. You can
+override using the `.groups` argument.
+```
+:::
+
+```{.r .cell-code}
 allergy_dsa_500_tor<- ggplot(allergy_dsa_500_gd, aes(
   y = .par_names,
   yend=.par_names,
@@ -371,15 +604,19 @@ allergy_dsa_500_tor<- ggplot(allergy_dsa_500_gd, aes(
   theme(plot.title = element_text(hjust = 0.5))
 
 print(allergy_dsa_500_tor)
-  
-  
 ```
+
+::: {.cell-output-display}
+![](Untitled_files/figure-html/unnamed-chunk-4-1.png){width=672}
+:::
+:::
 
 **3. sensitivity analysis parameter with food allergically fatality X1000 for watch and wait**
 
 
-```{r}
+::: {.cell}
 
+```{.r .cell-code}
 allergy_sa_1000<-define_dsa(
   p_ns_ar, ar_age(age = age)*0.8, ar_age(age = age) *1.2,
   p_sh, 0.121 *0.8,0.121 *1.2,
@@ -396,8 +633,21 @@ allergy_dsa_1000 <-run_dsa(
   model = allergy_mod,
   dsa = allergy_sa_1000
 )
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+Running DSA on strategy 'ED_transfer'...
+```
+:::
 
+::: {.cell-output .cell-output-stderr}
+```
+Running DSA on strategy 'watch_wait'...
+```
+:::
+
+```{.r .cell-code}
 allergy_dsa_1000_data<-as.data.frame(allergy_dsa_1000$dsa)
 
 allergy_dsa_1000_clean<-allergy_dsa_1000_data %>%
@@ -411,7 +661,16 @@ allergy_dsa_1000_gd<-allergy_dsa_1000_clean %>%
   summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
              effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
   mutate(cost_per_year_life_saved = cost_diff/effect_diff)
+```
 
+::: {.cell-output .cell-output-stderr}
+```
+`summarise()` has grouped output by '.par_names', '.par_value'. You can
+override using the `.groups` argument.
+```
+:::
+
+```{.r .cell-code}
 allergy_dsa_1000_tor<- ggplot(allergy_dsa_1000_gd, aes(
   y = .par_names,
   yend=.par_names,
@@ -423,6 +682,10 @@ allergy_dsa_1000_tor<- ggplot(allergy_dsa_1000_gd, aes(
   theme(plot.title = element_text(hjust = 0.5))
 
 print(allergy_dsa_1000_tor)
-
 ```
+
+::: {.cell-output-display}
+![](Untitled_files/figure-html/unnamed-chunk-5-1.png){width=672}
+:::
+:::
 

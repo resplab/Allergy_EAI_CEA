@@ -86,16 +86,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<script src="Untitled_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Untitled_files/libs/quarto-html/quarto.js"></script>
-<script src="Untitled_files/libs/quarto-html/popper.min.js"></script>
-<script src="Untitled_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Untitled_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Untitled_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Untitled_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Untitled_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Untitled_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Untitled_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Allergy_EAI_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Allergy_EAI_files/libs/quarto-html/quarto.js"></script>
+<script src="Allergy_EAI_files/libs/quarto-html/popper.min.js"></script>
+<script src="Allergy_EAI_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Allergy_EAI_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Allergy_EAI_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Allergy_EAI_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Allergy_EAI_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Allergy_EAI_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Allergy_EAI_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -554,131 +554,209 @@ the `.groups` argument.</code></pre>
 <pre><code>`summarise()` has grouped output by '.par_names', '.par_value'. You can
 override using the `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_100_tor<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(allergy_dsa_100_gd, <span class="fu">aes</span>(</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> .par_names,</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend=</span>.par_names,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> cost_per_year_life_saved,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> cost_per_year_life_saved_ref,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Boundary)) <span class="sc">+</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">linewidth =</span> <span class="dv">10</span>)  <span class="sc">+</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Tornado Diagram - 100X fatality from watch and wait "</span>) <span class="sc">+</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_100_tor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_100_gd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18 × 6
+# Groups:   .par_names, .par_value [18]
+   .par_names   .par_value Boundary cost_diff effect_diff cost_per_year_life_s…¹
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 acm          ... * 0.8  low      11440536.        2.01               5699364.
+ 2 acm          ... * 1.2  high     11435126.        2.01               5700657.
+ 3 dr           rescale_p… low      11755251.        2.01               5858197.
+ 4 dr           rescale_p… high     11132502.        2.01               5547852.
+ 5 p_ns_ar      ar_age(ag… low      12114111.        2.11               5746107.
+ 6 p_ns_ar      ar_age(ag… high     10804758.        1.91               5653593.
+ 7 p_sED_faf    rescale_p… low      11437830.        2.09               5480782.
+ 8 p_sED_faf    rescale_p… high     11437830.        1.96               5829556.
+ 9 p_severe     0.087 * 0… low       9066909.        1.59               5699773.
+10 p_severe     0.087 * 1… high     13853595.        2.43               5700254.
+11 p_sh         0.121 * 0… low      11438899.        2.01               5699817.
+12 p_sh         0.121 * 1… high     11436761.        2.01               5700204.
+13 p_sh_faf     0.0045 * … low      11438850.        2.01               5699822.
+14 p_sh_faf     0.0045 * … high     11436810.        2.01               5700198.
+15 p_sw_faf     rescale_p… high     11437891.       22.1                 518139.
+16 p_sw_faf     rescale_p… low      11437830.        2.01               5700011.
+17 treatment_c… 0.8        low      10921361.        2.01               5442630.
+18 treatment_c… 95         high     11869731.        2.01               5915248.
+# ℹ abbreviated name: ¹​cost_per_year_life_saved</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_100_tor<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(allergy_dsa_100_gd, <span class="fu">aes</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> .par_names,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend=</span>.par_names,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> cost_per_year_life_saved,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> cost_per_year_life_saved_ref,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Boundary)) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">linewidth =</span> <span class="dv">10</span>)  <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Tornado Diagram - 100X fatality from watch and wait "</span>) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_100_tor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Untitled_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<p><img src="Allergy_EAI_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>2. sensitivity analysis parameter with food allergically fatality X500 for watch and wait</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>allergy_sa_500<span class="ot">&lt;-</span><span class="fu">define_dsa</span>(</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  p_ns_ar, <span class="fu">ar_age</span>(<span class="at">age =</span> age)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">ar_age</span>(<span class="at">age =</span> age) <span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  p_sh, <span class="fl">0.121</span> <span class="sc">*</span><span class="fl">0.8</span>,<span class="fl">0.121</span> <span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  p_sED_faf, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span> <span class="fl">0.8</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span><span class="fl">1.2</span>, <span class="at">from =</span> <span class="dv">365</span>) ,</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  p_severe, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">0.8</span>, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">1.2</span> ,</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  p_sh_faf, <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">0.8</span>,  <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  acm, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  dr, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ED, <span class="fl">0.8</span>, <span class="dv">95</span>,</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  p_sw_faf, <span class="fu">rescale_prob</span> (<span class="at">p =</span> <span class="fl">0.0002</span>, <span class="at">from =</span> <span class="dv">365</span>),<span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.001</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="co"># fatality increase to X500,lower use X100 </span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500 <span class="ot">&lt;-</span><span class="fu">run_dsa</span>(</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> allergy_mod,</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dsa =</span> allergy_sa_500</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>allergy_sa_500<span class="ot">&lt;-</span><span class="fu">define_dsa</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  p_ns_ar, <span class="fu">ar_age</span>(<span class="at">age =</span> age)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">ar_age</span>(<span class="at">age =</span> age) <span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  p_sh, <span class="fl">0.121</span> <span class="sc">*</span><span class="fl">0.8</span>,<span class="fl">0.121</span> <span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  p_sED_faf, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span> <span class="fl">0.8</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span><span class="fl">1.2</span>, <span class="at">from =</span> <span class="dv">365</span>) ,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  p_severe, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">0.8</span>, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">1.2</span> ,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  p_sh_faf, <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">0.8</span>,  <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  acm, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  dr, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ED, <span class="fl">0.8</span>, <span class="dv">95</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  p_sw_faf, <span class="fu">rescale_prob</span> (<span class="at">p =</span> <span class="fl">0.0002</span>, <span class="at">from =</span> <span class="dv">365</span>),<span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.001</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="co"># fatality increase to X500,lower use X100 </span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500 <span class="ot">&lt;-</span><span class="fu">run_dsa</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> allergy_mod,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dsa =</span> allergy_sa_500</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Running DSA on strategy 'ED_transfer'...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Running DSA on strategy 'watch_wait'...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_data<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(allergy_dsa_500<span class="sc">$</span>dsa)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_clean<span class="ot">&lt;-</span>allergy_dsa_500_data <span class="sc">%&gt;%</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )<span class="sc">%&gt;%</span> </span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Boundary =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"low"</span>,<span class="st">"high"</span>), <span class="at">length.out =</span> <span class="fu">nrow</span>(allergy_dsa_500_data))) </span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_gd<span class="ot">&lt;-</span>allergy_dsa_500_clean <span class="sc">%&gt;%</span> </span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(.par_names, .par_value, Boundary) <span class="sc">%&gt;%</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>( <span class="at">cost_diff =</span>.cost[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span> .cost[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>],</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">effect_diff =</span> .effect[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span>.effect[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cost_per_year_life_saved =</span> cost_diff<span class="sc">/</span>effect_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_data<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(allergy_dsa_500<span class="sc">$</span>dsa)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_clean<span class="ot">&lt;-</span>allergy_dsa_500_data <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )<span class="sc">%&gt;%</span> </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Boundary =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"low"</span>,<span class="st">"high"</span>), <span class="at">length.out =</span> <span class="fu">nrow</span>(allergy_dsa_500_data))) </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_gd<span class="ot">&lt;-</span>allergy_dsa_500_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(.par_names, .par_value, Boundary) <span class="sc">%&gt;%</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>( <span class="at">cost_diff =</span>.cost[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span> .cost[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>],</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">effect_diff =</span> .effect[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span>.effect[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cost_per_year_life_saved =</span> cost_diff<span class="sc">/</span>effect_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by '.par_names', '.par_value'. You can
 override using the `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_tor<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(allergy_dsa_500_gd, <span class="fu">aes</span>(</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> .par_names,</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend=</span>.par_names,</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> cost_per_year_life_saved,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> cost_per_year_life_saved_ref,</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Boundary)) <span class="sc">+</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">linewidth =</span> <span class="dv">10</span>)  <span class="sc">+</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Tornado Diagram - 500X mortality from watch and wait "</span>) <span class="sc">+</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_500_tor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_500_gd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18 × 6
+# Groups:   .par_names, .par_value [18]
+   .par_names   .par_value Boundary cost_diff effect_diff cost_per_year_life_s…¹
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 acm          ... * 0.8  low      11440536.        2.01               5699364.
+ 2 acm          ... * 1.2  high     11435126.        2.01               5700657.
+ 3 dr           rescale_p… low      11755251.        2.01               5858197.
+ 4 dr           rescale_p… high     11132502.        2.01               5547852.
+ 5 p_ns_ar      ar_age(ag… low      12114111.        2.11               5746107.
+ 6 p_ns_ar      ar_age(ag… high     10804758.        1.91               5653593.
+ 7 p_sED_faf    rescale_p… low      11437830.        2.09               5480782.
+ 8 p_sED_faf    rescale_p… high     11437830.        1.96               5829556.
+ 9 p_severe     0.087 * 0… low       9066909.        1.59               5699773.
+10 p_severe     0.087 * 1… high     13853595.        2.43               5700254.
+11 p_sh         0.121 * 0… low      11438899.        2.01               5699817.
+12 p_sh         0.121 * 1… high     11436761.        2.01               5700204.
+13 p_sh_faf     0.0045 * … low      11438850.        2.01               5699822.
+14 p_sh_faf     0.0045 * … high     11436810.        2.01               5700198.
+15 p_sw_faf     rescale_p… high     11438159.      111.                  102759.
+16 p_sw_faf     rescale_p… low      11437891.       22.1                 518139.
+17 treatment_c… 0.8        low      10921361.        2.01               5442630.
+18 treatment_c… 95         high     11869731.        2.01               5915248.
+# ℹ abbreviated name: ¹​cost_per_year_life_saved</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_500_tor<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(allergy_dsa_500_gd, <span class="fu">aes</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> .par_names,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend=</span>.par_names,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> cost_per_year_life_saved,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> cost_per_year_life_saved_ref,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Boundary)) <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">linewidth =</span> <span class="dv">10</span>)  <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Tornado Diagram - 500X mortality from watch and wait "</span>) <span class="sc">+</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_500_tor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Untitled_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="Allergy_EAI_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>3. sensitivity analysis parameter with food allergically fatality X1000 for watch and wait</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>allergy_sa_1000<span class="ot">&lt;-</span><span class="fu">define_dsa</span>(</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  p_ns_ar, <span class="fu">ar_age</span>(<span class="at">age =</span> age)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">ar_age</span>(<span class="at">age =</span> age) <span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  p_sh, <span class="fl">0.121</span> <span class="sc">*</span><span class="fl">0.8</span>,<span class="fl">0.121</span> <span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  p_sED_faf, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span> <span class="fl">0.8</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span><span class="fl">1.2</span>, <span class="at">from =</span> <span class="dv">365</span>) ,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  p_severe, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">0.8</span>, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">1.2</span> ,</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  p_sh_faf, <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">0.8</span>,  <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  acm, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  dr, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ED, <span class="fl">0.8</span>, <span class="dv">95</span>,</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  p_sw_faf, <span class="fu">rescale_prob</span> (<span class="at">p =</span> <span class="fl">0.0010</span>, <span class="at">from =</span> <span class="dv">365</span>),<span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.002</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="co">#fatality increase to 1000,lower is X500</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000 <span class="ot">&lt;-</span><span class="fu">run_dsa</span>(</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> allergy_mod,</span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dsa =</span> allergy_sa_1000</span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>allergy_sa_1000<span class="ot">&lt;-</span><span class="fu">define_dsa</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  p_ns_ar, <span class="fu">ar_age</span>(<span class="at">age =</span> age)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">ar_age</span>(<span class="at">age =</span> age) <span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  p_sh, <span class="fl">0.121</span> <span class="sc">*</span><span class="fl">0.8</span>,<span class="fl">0.121</span> <span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  p_sED_faf, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span> <span class="fl">0.8</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.000002</span> <span class="sc">*</span><span class="fl">1.2</span>, <span class="at">from =</span> <span class="dv">365</span>) ,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  p_severe, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">0.8</span>, <span class="fl">0.087</span> <span class="sc">*</span><span class="fl">1.2</span> ,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  p_sh_faf, <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">0.8</span>,  <span class="fl">0.0045</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  acm, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">look_up</span>(<span class="at">data =</span> life_table, <span class="at">Age =</span> age, <span class="at">value =</span> <span class="st">"fatality_daily"</span>)<span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  dr, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">0.8</span>, <span class="fu">rescale_prob</span>( <span class="at">p=</span><span class="fl">0.015</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ED, <span class="fl">0.8</span>, <span class="dv">95</span>,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  p_sw_faf, <span class="fu">rescale_prob</span> (<span class="at">p =</span> <span class="fl">0.0010</span>, <span class="at">from =</span> <span class="dv">365</span>),<span class="fu">rescale_prob</span>(<span class="at">p =</span> <span class="fl">0.002</span>, <span class="at">from =</span> <span class="dv">365</span>) <span class="co">#fatality increase to 1000,lower is X500</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000 <span class="ot">&lt;-</span><span class="fu">run_dsa</span>(</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> allergy_mod,</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dsa =</span> allergy_sa_1000</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Running DSA on strategy 'ED_transfer'...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Running DSA on strategy 'watch_wait'...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_data<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(allergy_dsa_1000<span class="sc">$</span>dsa)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_clean<span class="ot">&lt;-</span>allergy_dsa_1000_data <span class="sc">%&gt;%</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )<span class="sc">%&gt;%</span> </span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Boundary =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"low"</span>,<span class="st">"high"</span>), <span class="at">length.out =</span> <span class="fu">nrow</span>(allergy_dsa_1000_data))) </span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_gd<span class="ot">&lt;-</span>allergy_dsa_1000_clean <span class="sc">%&gt;%</span> </span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(.par_names, .par_value, Boundary) <span class="sc">%&gt;%</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>( <span class="at">cost_diff =</span>.cost[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span> .cost[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>],</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">effect_diff =</span> .effect[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span>.effect[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cost_per_year_life_saved =</span> cost_diff<span class="sc">/</span>effect_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_data<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(allergy_dsa_1000<span class="sc">$</span>dsa)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_clean<span class="ot">&lt;-</span>allergy_dsa_1000_data <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )<span class="sc">%&gt;%</span> </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Boundary =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"low"</span>,<span class="st">"high"</span>), <span class="at">length.out =</span> <span class="fu">nrow</span>(allergy_dsa_1000_data))) </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_gd<span class="ot">&lt;-</span>allergy_dsa_1000_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(.par_names, .par_value, Boundary) <span class="sc">%&gt;%</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>( <span class="at">cost_diff =</span>.cost[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span> .cost[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>],</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">effect_diff =</span> .effect[.strategy_names <span class="sc">==</span> <span class="st">"ED_transfer"</span>] <span class="sc">-</span>.effect[.strategy_names <span class="sc">==</span> <span class="st">"watch_wait"</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cost_per_year_life_saved =</span> cost_diff<span class="sc">/</span>effect_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by '.par_names', '.par_value'. You can
 override using the `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_tor<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(allergy_dsa_1000_gd, <span class="fu">aes</span>(</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> .par_names,</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend=</span>.par_names,</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> cost_per_year_life_saved,</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> cost_per_year_life_saved_ref,</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Boundary)) <span class="sc">+</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">linewidth =</span> <span class="dv">10</span>)  <span class="sc">+</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Tornado Diagram - 1000X fatality from watch and wait "</span>) <span class="sc">+</span></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_1000_tor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_1000_gd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18 × 6
+# Groups:   .par_names, .par_value [18]
+   .par_names   .par_value Boundary cost_diff effect_diff cost_per_year_life_s…¹
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 acm          ... * 0.8  low      11440536.        2.01               5699364.
+ 2 acm          ... * 1.2  high     11435126.        2.01               5700657.
+ 3 dr           rescale_p… low      11755251.        2.01               5858197.
+ 4 dr           rescale_p… high     11132502.        2.01               5547852.
+ 5 p_ns_ar      ar_age(ag… low      12114111.        2.11               5746107.
+ 6 p_ns_ar      ar_age(ag… high     10804758.        1.91               5653593.
+ 7 p_sED_faf    rescale_p… low      11437830.        2.09               5480782.
+ 8 p_sED_faf    rescale_p… high     11437830.        1.96               5829556.
+ 9 p_severe     0.087 * 0… low       9066909.        1.59               5699773.
+10 p_severe     0.087 * 1… high     13853595.        2.43               5700254.
+11 p_sh         0.121 * 0… low      11438899.        2.01               5699817.
+12 p_sh         0.121 * 1… high     11436761.        2.01               5700204.
+13 p_sh_faf     0.0045 * … low      11438850.        2.01               5699822.
+14 p_sh_faf     0.0045 * … high     11436810.        2.01               5700198.
+15 p_sw_faf     rescale_p… low      11438159.      111.                  102759.
+16 p_sw_faf     rescale_p… high     11438494.      223.                   51304.
+17 treatment_c… 0.8        low      10921361.        2.01               5442630.
+18 treatment_c… 95         high     11869731.        2.01               5915248.
+# ℹ abbreviated name: ¹​cost_per_year_life_saved</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>allergy_dsa_1000_tor<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(allergy_dsa_1000_gd, <span class="fu">aes</span>(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> .par_names,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend=</span>.par_names,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> cost_per_year_life_saved,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> cost_per_year_life_saved_ref,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Boundary)) <span class="sc">+</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">linewidth =</span> <span class="dv">10</span>)  <span class="sc">+</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Tornado Diagram - 1000X fatality from watch and wait "</span>) <span class="sc">+</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(allergy_dsa_1000_tor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Untitled_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="Allergy_EAI_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
