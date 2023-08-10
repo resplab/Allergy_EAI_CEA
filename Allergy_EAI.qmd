@@ -450,7 +450,7 @@ tornado_plot <- function(df, refer_value){
   
   dsa_names<-c("Discount rate (0%,3%)","Annual remission probability  (+/-20%)",
                "Probabiltiy of transition to severe exacerbation -(+/-20%)","Probabiltity of hospitalization (+/-20%)", "Probability of hospitalizaiton mortalated -allergy related (+/-20%)",
-               "Cost - epinephrine cost in ED (0.8, 95)")
+               "epinephrine cost for ED transfer (0.8, 95)")
   
   df$parameter <- dsa_names
   # get order of parameters according to size of intervals

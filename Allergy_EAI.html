@@ -834,7 +834,7 @@ the `.groups` argument.</code></pre>
 <span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  dsa_names<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Discount rate (0%,3%)"</span>,<span class="st">"Annual remission probability  (+/-20%)"</span>,</span>
 <span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Probabiltiy of transition to severe exacerbation -(+/-20%)"</span>,<span class="st">"Probabiltity of hospitalization (+/-20%)"</span>, <span class="st">"Probability of hospitalizaiton mortalated -allergy related (+/-20%)"</span>,</span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Cost - epinephrine cost in ED (0.8, 95)"</span>)</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>               <span class="st">"epinephrine cost for ED transfer (0.8, 95)"</span>)</span>
 <span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>parameter <span class="ot">&lt;-</span> dsa_names</span>
 <span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get order of parameters according to size of intervals</span></span>
@@ -891,7 +891,7 @@ the `.groups` argument.</code></pre>
 3 p_severe             5741670.    5742155.          485. Probabiltiy of transi…
 4 p_sh                 5741715.    5742105.          390. Probabiltity of hospi…
 5 p_sh_faf             5741720.    5742099.          379. Probability of hospit…
-6 treatment_cost_ED    5442630.    5992185.       549555. Cost - epinephrine co…
+6 treatment_cost_ED    5442630.    5992185.       549555. epinephrine cost for …
 
 [[2]]</code></pre>
 </div>
