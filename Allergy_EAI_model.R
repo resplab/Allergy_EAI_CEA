@@ -38,8 +38,8 @@ ar_age<-function(age) {if_else(age <=6, rescale_prob(0.058,from = 365), 0)
 #dr: discount rate
 #acm: all-cause mortality
 
-
-par_allerg<-modify(
+#parameter for X10 mortality in watch and wait 
+par_allerg_10<-modify(
 par_allerg,
 p_severe = 0.087,
 p_ns_ar = ar_age(age = age) , # transition from non-severe reaction to food allergy remission
@@ -53,9 +53,57 @@ p_sh_faf= 0.0045, # transition from hospitalization to food allergy fatality # o
 acm = look_up(data = life_table, Age = age, value = "fatality_daily"), #daily all-cause mortality
 dr=rescale_prob( p=0.015, from = 365),
 treatment_cost_ED=0.8 +51.3
-
   )
 
+#parameter for X100 mortality in watch and wait 
+par_allerg_100<-modify(
+  par_allerg,
+  p_severe = 0.087,
+  p_ns_ar = ar_age(age = age) , # transition from non-severe reaction to food allergy remission
+  p_ns_sw_ww = (1-0.14) * rescale_prob(p =p_severe, from = 365) , # non-severe reaction to severe reaction for watch and wait
+  p_ns_sED_ww =  0.14 * rescale_prob(p = p_severe, from = 365), # non-severe reaction to severe reaction transfer to ED for watch and wait
+  p_sh = 0.121, #transition from severe state to hospitalization 
+  p_sw_faf = rescale_prob(p = 0.0002, from = 365), # Watch and wait to food allergy fatality
+  p_sED_faf = rescale_prob(p = 0.000002, from = 365), # transition from ED to food allergy fatality
+  p_ns_sED_ED= rescale_prob(p =p_severe, from = 365), # transition from non-severe to ED
+  p_sh_faf= 0.0045, # transition from hospitalization to food allergy fatality # old value 0.0045 
+  acm = look_up(data = life_table, Age = age, value = "fatality_daily"), #daily all-cause mortality
+  dr=rescale_prob( p=0.015, from = 365),
+  treatment_cost_ED=0.8 +51.3
+)
+
+#parameter for X500 mortality in watch and wait 
+par_allerg_500<-modify(
+  par_allerg,
+  p_severe = 0.087,
+  p_ns_ar = ar_age(age = age) , # transition from non-severe reaction to food allergy remission
+  p_ns_sw_ww = (1-0.14) * rescale_prob(p =p_severe, from = 365) , # non-severe reaction to severe reaction for watch and wait
+  p_ns_sED_ww =  0.14 * rescale_prob(p = p_severe, from = 365), # non-severe reaction to severe reaction transfer to ED for watch and wait
+  p_sh = 0.121, #transition from severe state to hospitalization 
+  p_sw_faf = rescale_prob(p = 0.001, from = 365), # Watch and wait to food allergy fatality
+  p_sED_faf = rescale_prob(p = 0.000002, from = 365), # transition from ED to food allergy fatality
+  p_ns_sED_ED= rescale_prob(p =p_severe, from = 365), # transition from non-severe to ED
+  p_sh_faf= 0.0045, # transition from hospitalization to food allergy fatality # old value 0.0045 
+  acm = look_up(data = life_table, Age = age, value = "fatality_daily"), #daily all-cause mortality
+  dr=rescale_prob( p=0.015, from = 365),
+  treatment_cost_ED=0.8 +51.3
+)
+#parameter for X1000 mortality in watch and wait 
+par_allerg_1000<-modify(
+  par_allerg,
+  p_severe = 0.087,
+  p_ns_ar = ar_age(age = age) , # transition from non-severe reaction to food allergy remission
+  p_ns_sw_ww = (1-0.14) * rescale_prob(p =p_severe, from = 365) , # non-severe reaction to severe reaction for watch and wait
+  p_ns_sED_ww =  0.14 * rescale_prob(p = p_severe, from = 365), # non-severe reaction to severe reaction transfer to ED for watch and wait
+  p_sh = 0.121, #transition from severe state to hospitalization 
+  p_sw_faf = rescale_prob(p = 0.002, from = 365), # Watch and wait to food allergy fatality
+  p_sED_faf = rescale_prob(p = 0.000002, from = 365), # transition from ED to food allergy fatality
+  p_ns_sED_ED= rescale_prob(p =p_severe, from = 365), # transition from non-severe to ED
+  p_sh_faf= 0.0045, # transition from hospitalization to food allergy fatality # old value 0.0045 
+  acm = look_up(data = life_table, Age = age, value = "fatality_daily"), #daily all-cause mortality
+  dr=rescale_prob( p=0.015, from = 365),
+  treatment_cost_ED=0.8 +51.3
+)
 #transition matrix for ED transfer 
 Transition_ED <- define_transition(
   state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
@@ -126,7 +174,9 @@ state_sw<-define_state(
 state_sED<- define_state(
   remission_cost= 0,
   medical_cost = 1254/365, 
-  treatment_cost = treatment_cost_ED,
+  treatment_cost = dispatch_strategy(
+    ED_transfer = treatment_cost_ED,
+    watch_wait = 0.8),
   ambulance_cost = 848,
   medical_cost_ED = 331,
   medical_cost_hospitalized =0,
@@ -207,8 +257,9 @@ time0 <- define_init(state_ar = 0,
                      state_faf= 0,
                      state_acm=0)
 
-allergy_mod<-run_model(
-                parameters = par_allerg,
+#run model for X10 mortality in wath and wait 
+allergy_mod_10<-run_model(
+                parameters = par_allerg_10,
                 ED_transfer = strategy_ED,
                 watch_wait = strategy_watch,
                 init = time0,
@@ -218,182 +269,213 @@ allergy_mod<-run_model(
                 central_strategy ="ED_transfer"
 )
 
-summary(allergy_mod )
+#run model for X100 mortality in wath and wait  
+allergy_mod_100<-run_model(
+  parameters = par_allerg_100,
+  ED_transfer = strategy_ED,
+  watch_wait = strategy_watch,
+  init = time0,
+  cycles = 20*365,
+  cost = cost_total,
+  effect = utility,
+  central_strategy ="ED_transfer"
+)
+#run model for X500 mortality in wath and wait 
+allergy_mod_500<-run_model(
+  parameters = par_allerg_500,
+  ED_transfer = strategy_ED,
+  watch_wait = strategy_watch,
+  init = time0,
+  cycles = 20*365,
+  cost = cost_total,
+  effect = utility,
+  central_strategy ="ED_transfer"
+)
+#run model for X1000 mortality in wath and wait 
+allergy_mod_1000<-run_model(
+  parameters = par_allerg_1000,
+  ED_transfer = strategy_ED,
+  watch_wait = strategy_watch,
+  init = time0,
+  cycles = 20*365,
+  cost = cost_total,
+  effect = utility,
+  central_strategy ="ED_transfer"
+)
 
-value<-get_values(allergy_mod)
 
-tmp <- get_counts(allergy_mod)
+summary(allergy_mod_10 )
+summary(allergy_mod_100)
+summary(allergy_mod_500)
+summary(allergy_mod_1000)
+
+
+value_10<-get_values(allergy_mod_10)
+value_100<-get_values(allergy_mod_100)
+value_500<-get_values(allergy_mod_500)
+value_1000<-get_values(allergy_mod_1000)
+
+tmp <- get_counts(allergy_mod_10)
+
+#get the count of food allergy mortality in the last markov cycle
+faf_watch_wait_last<-tmp$count[tmp$.strategy_names == "watch_wait" & tmp$model_time ==7300 & tmp$state_names == "state_faf"]
+faf_ED_transfer_last<-tmp$count[tmp$.strategy_names == "ED_transfer" & tmp$model_time ==7300 & tmp$state_names == "state_faf"]
+
+#calculate the fatality risk difference over 20 years 
+fatality_risk_base<-(faf_watch_wait_last- faf_ED_transfer_last)/10000
 
 tmp %>%   
   group_by(.strategy_names, state_names) %>% 
   summarize(avg=mean(count), sum=sum(count))
 
-value_summary<-value %>%   
+#develop the table to compare the effect of different mortality in watch & wait
+value_summary_10<-value_10 %>%   
   group_by(.strategy_names, value_names) %>% 
-      summarize(sum=sum(value)) 
+      summarize(sum=sum(value/10000)) %>% 
+        pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
 
-print(value_summary)
+value_summary_100<-value_100 %>%   
+  group_by(.strategy_names, value_names) %>% 
+  summarize(sum=sum(value/10000)) %>% 
+  pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
 
-# calculate cost difference between ED transfer and watch and wait in allergy model 
-cost_diff_refer <- value_summary$sum[value_summary$.strategy_names == "ED_transfer" & value_summary$value_names == "cost_total"] -
-                        value_summary$sum[value_summary$.strategy_names == "watch_wait" & value_summary$value_names == "cost_total"] 
+value_summary_500<-value_500 %>%   
+  group_by(.strategy_names, value_names) %>% 
+  summarize(sum=sum(value/10000)) %>% 
+  pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
+
+value_summary_1000<-value_1000 %>%   
+  group_by(.strategy_names, value_names) %>% 
+  summarize(sum=sum(value/10000)) %>% 
+  pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
+
+value_table_10<-value_summary_10 %>% 
+  mutate(cost_diff = cost_total- lag(cost_total)) %>%
+    mutate(Qaly_diff = utility- lag(utility)) %>%
+      mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
+        mutate(scenario ="10 times mortality in watch and wait") %>%
+          select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved) 
+
+value_table_100<-value_summary_100 %>% 
+  mutate(cost_diff = cost_total- lag(cost_total)) %>%
+  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
+  mutate(scenario ="100 times mortality in watch and wait") %>%
+  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved) 
+
+value_table_500<-value_summary_500 %>% 
+  mutate(cost_diff = cost_total- lag(cost_total)) %>%
+  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
+  mutate(scenario ="500 times mortality in watch and wait") %>%
+  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+
+value_table_1000<-value_summary_1000 %>% 
+  mutate(cost_diff = cost_total- lag(cost_total)) %>%
+  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
+  mutate(scenario ="1000 times mortality in watch and wait") %>%
+  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
 
 
-#calculate utility difference between ED transfer and watch and wait in allergy 
-utility_diff_refer<-value_summary$sum[value_summary$.strategy_names == "ED_transfer" & value_summary$value_names == "utility"] -
-  value_summary$sum[value_summary$.strategy_names == "watch_wait" & value_summary$value_names == "utility"] 
+#calculate the cost per year life saved in base allergy model
+cost_per_year_life_saved_ref<-value_table_10$cost_per_life_saved[value_table_10$.strategy_names == "watch_wait"]
 
-#calculate the cost per year life saved in allergy model
-cost_per_year_life_saved_ref<-cost_diff_refer/utility_diff_refer
+final_Table<-bind_rows(value_table_10,value_table_100,value_table_500,value_table_1000)  
 
-#sensitivity analysis parameter with food allergically fatality X100 from watch and wait 
-allergy_sa_100<-define_dsa(
+final_Table<-final_Table %>% mutate_if(is.numeric, as.character) 
+final_Table <-replace(final_Table, is.na(final_Table),"reference") 
+
+final_Table<-final_Table %>% rename(
+  "strategy_name"= ".strategy_names",
+  "QALYs_total" = "utility",
+  "increment_cost" = "cost_diff",
+  "increment_Qaly" = "Qaly_diff",
+  "increment_cost_per_life_saved" = "cost_per_life_saved"
+  
+)
+
+#final summary table for different fatality scenario
+print(final_Table)
+
+# sensitivity analysis parameter 
+allergy_sa<-define_dsa(
   p_ns_ar, ar_age(age = age)*0.8, ar_age(age = age) *1.2,
   p_sh, 0.121 *0.8,0.121 *1.2,
-  p_sED_faf, rescale_prob(p = 0.000002 * 0.8, from = 365) *0.8, rescale_prob(p = 0.000002 *1.2, from = 365) ,
   p_severe, 0.087 *0.8, 0.087 *1.2 ,
   p_sh_faf, 0.0045*0.8,  0.0045*1.2,
-  acm, look_up(data = life_table, Age = age, value = "fatality_daily")*0.8, look_up(data = life_table, Age = age, value = "fatality_daily")*1.2,
-  dr, rescale_prob( p=0.015, from = 365) *0.8, rescale_prob( p=0.015, from = 365) *1.2,
-  treatment_cost_ED, 0.8, 95,
-  p_sw_faf, rescale_prob (p = 0.00002, from = 365),rescale_prob(p = 0.0002, from = 365) #fatality increase to 100,lower is original
+  dr, 0, rescale_prob( p=0.03, from = 365) *1.2,
+  treatment_cost_ED, 0.8, 95
 )
 
 #run sensitivity analysis 
-allergy_dsa_100 <-run_dsa(
-  model = allergy_mod,
-  dsa = allergy_sa_100
+allergy_dsa<-run_dsa(
+  model = allergy_mod_10,
+  dsa = allergy_sa
 )
 
-#draw tornado graph, category boundary into low and high 
-allergy_dsa_100_data<-as.data.frame(allergy_dsa_100$dsa)
-
-allergy_dsa_100_clean<-allergy_dsa_100_data %>%
-  select(
+#Build tornado plot for SA result
+tornado_plot <- function(df, refer_value){
+  
+  #calculating cost per year saved
+  df <-as.data.frame(df)
+  df <- df %>% select(
     .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )%>% 
-  mutate(
-    Boundary = rep(c("low","high"), length.out = nrow(allergy_dsa_100_data))) 
+    mutate(
+      Boundary = rep(c("Lower_Bound","Upper_Bound"), length.out = nrow(df))) 
+  df<-df %>%  group_by(.par_names, Boundary) %>%
+    summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
+               effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
+    mutate(cost_per_Qaly_gained = cost_diff/effect_diff) %>% ungroup()
+  df<-df%>% select(.par_names, Boundary,cost_per_Qaly_gained) %>%
+    pivot_wider(names_from = Boundary,values_from = cost_per_Qaly_gained) 
 
-allergy_dsa_100_gd<-allergy_dsa_100_clean %>% 
-  group_by(.par_names, .par_value, Boundary) %>%
- summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
-   effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
-  mutate(cost_per_year_life_saved = cost_diff/effect_diff)
+  df$UL_Difference <- abs(df$Upper_Bound - df$Lower_Bound)
+  base.value <- refer_value
+  
+  dsa_names<-c("Discount rate (0%,3%)","Annual remission probability  (+/-20%)",
+               "Probabiltiy of transition to severe exacerbation -(+/-20%)","Probabiltity of hospitalization (+/-20%)", "Probability of hospitalizaiton mortalated -allergy related (+/-20%)",
+               "Cost - epinephrine cost in ED (0.8, 95)")
+  
+  df$parameter <- dsa_names
+  # get order of parameters according to size of intervals
+  order.parameters <- df %>% arrange(UL_Difference) %>%
+    mutate(parameter=factor(x=parameter, levels=parameter)) %>%
+    select(parameter) %>% unlist() %>% levels()
+  
+  # width of columns in plot (value between 0 and 1)
+  width <- 0.8
+  
+  # get data frame in shape for ggplot and geom_rect
+  df.2 <- df %>% 
+    # gather columns Lower_Bound and Upper_Bound into a single column using gather
+    gather(key='type', value='output.value', Lower_Bound:Upper_Bound) %>%
+    # just reordering columns
+    select(parameter, type, output.value, UL_Difference) %>%
+    # create the columns for geom_rect
+    mutate(parameter=factor(parameter, levels=order.parameters),
+           ymin=pmin(output.value, base.value),
+           ymax=pmax(output.value, base.value),
+           xmin=as.numeric(parameter)-width/2,
+           xmax=as.numeric(parameter)+width/2)
+  
+  
+  p <- ggplot() + 
+    geom_rect(data = df.2, 
+              aes(ymax=ymax, ymin=ymin, xmax=xmax, xmin=xmin, fill=type)) +
+    theme_bw() +
+    theme(axis.title.y=element_blank(), legend.position = 'bottom',
+          legend.title = element_blank()) + 
+    geom_hline(yintercept = base.value) +
+    scale_x_continuous(breaks = c(1:length(order.parameters)), 
+                       labels = order.parameters) +
+    coord_flip() + labs(y="incremental cost per life-year saved")
+  
+  
+  list(df,p)
+}
 
-allergy_dsa_100_tor<- ggplot(allergy_dsa_100_gd, aes(
-  y = .par_names,
-  yend=.par_names,
-  x = cost_per_year_life_saved,
-  xend = cost_per_year_life_saved_ref,
-  color = Boundary)) +
-  geom_segment(linewidth = 10)  +
-  ggtitle("Tornado Diagram - 100X fatality from watch and wait ") +
-  theme(plot.title = element_text(hjust = 0.5))
+#tornado_plot for the model
+tornado_plot(allergy_dsa$dsa, cost_per_year_life_saved_ref)
 
-
-allergy_sa_500<-define_dsa(
-  p_ns_ar, ar_age(age = age)*0.8, ar_age(age = age) *1.2,
-  p_sh, 0.121 *0.8,0.121 *1.2,
-  p_sED_faf, rescale_prob(p = 0.000002 * 0.8, from = 365) *0.8, rescale_prob(p = 0.000002 *1.2, from = 365) ,
-  p_severe, 0.087 *0.8, 0.087 *1.2 ,
-  p_sh_faf, 0.0045*0.8,  0.0045*1.2,
-  acm, look_up(data = life_table, Age = age, value = "fatality_daily")*0.8, look_up(data = life_table, Age = age, value = "fatality_daily")*1.2,
-  dr, rescale_prob( p=0.015, from = 365) *0.8, rescale_prob( p=0.015, from = 365) *1.2,
-  treatment_cost_ED, 0.8, 95,
-  p_sw_faf, rescale_prob (p = 0.0002, from = 365),rescale_prob(p = 0.001, from = 365) # fatality increase to X500,lower use X100 
-)
-
-allergy_dsa_500 <-run_dsa(
-  model = allergy_mod,
-  dsa = allergy_sa_500
-)
-
-
-allergy_dsa_500_data<-as.data.frame(allergy_dsa_500$dsa)
-
-allergy_dsa_500_clean<-allergy_dsa_500_data %>%
-  select(
-    .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )%>% 
-  mutate(
-    Boundary = rep(c("low","high"), length.out = nrow(allergy_dsa_500_data))) 
-
-allergy_dsa_500_gd<-allergy_dsa_500_clean %>% 
-  group_by(.par_names, .par_value, Boundary) %>%
-  summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
-             effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
-  mutate(cost_per_year_life_saved = cost_diff/effect_diff)
-
-allergy_dsa_500_tor<- ggplot(allergy_dsa_500_gd, aes(
-  y = .par_names,
-  yend=.par_names,
-  x = cost_per_year_life_saved,
-  xend = cost_per_year_life_saved_ref,
-  color = Boundary)) +
-  geom_segment(linewidth = 10)  +
-  ggtitle("Tornado Diagram - 500X mortality from watch and wait ") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-allergy_sa_1000<-define_dsa(
-  p_ns_ar, ar_age(age = age)*0.8, ar_age(age = age) *1.2,
-  p_sh, 0.121 *0.8,0.121 *1.2,
-  p_sED_faf, rescale_prob(p = 0.000002 * 0.8, from = 365) *0.8, rescale_prob(p = 0.000002 *1.2, from = 365) ,
-  p_severe, 0.087 *0.8, 0.087 *1.2 ,
-  p_sh_faf, 0.0045*0.8,  0.0045*1.2,
-  acm, look_up(data = life_table, Age = age, value = "fatality_daily")*0.8, look_up(data = life_table, Age = age, value = "fatality_daily")*1.2,
-  dr, rescale_prob( p=0.015, from = 365) *0.8, rescale_prob( p=0.015, from = 365) *1.2,
-  treatment_cost_ED, 0.8, 95,
-  p_sw_faf, rescale_prob (p = 0.0010, from = 365),rescale_prob(p = 0.002, from = 365) #fatality increase to 1000,lower is X500
-)
-
-allergy_dsa_1000 <-run_dsa(
-  model = allergy_mod,
-  dsa = allergy_sa_1000
-)
-
-
-allergy_dsa_1000_data<-as.data.frame(allergy_dsa_1000$dsa)
-
-allergy_dsa_1000_clean<-allergy_dsa_1000_data %>%
-  select(
-    .strategy_names, .par_names, .par_value, .cost, .effect, .n_indiv )%>% 
-  mutate(
-    Boundary = rep(c("low","high"), length.out = nrow(allergy_dsa_1000_data))) 
-
-allergy_dsa_1000_gd<-allergy_dsa_1000_clean %>% 
-  group_by(.par_names, .par_value, Boundary) %>%
-  summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
-             effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
-  mutate(cost_per_year_life_saved = cost_diff/effect_diff)
-
-allergy_dsa_1000_tor<- ggplot(allergy_dsa_1000_gd, aes(
-  y = .par_names,
-  yend=.par_names,
-  x = cost_per_year_life_saved,
-  xend = cost_per_year_life_saved_ref,
-  color = Boundary)) +
-  geom_segment(linewidth = 10)  +
-  ggtitle("Tornado Diagram - 1000X fatality from watch and wait ") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-#tonado graph draw by heemod
-plot(
-  allergy_dsa_100,
-  type = "difference",
-  result = "icer") 
-
-
-
-plot(allergy_mod, states = c("state_faf" )) 
-plot(allergy_mod, states = c("state_sh")) 
-plot(allergy_mod, states = c("state_sED")) 
-plot(allergy_mod, states = c("state_sw"))
-plot(allergy_mod,states = c("state_ns"))
-plot(allergy_mod, states = c("state_ar"))
-
-get_counts(allergy_mod)
-
-plot(allergy_mod,
-     type = c("ce")
-    )
-summary(allergy_mod)
 
