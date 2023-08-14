@@ -330,13 +330,13 @@ The following object is masked from 'package:purrr':
 <span id="cb9-152"><a href="#cb9-152" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-153"><a href="#cb9-153" aria-hidden="true" tabindex="-1"></a><span class="co"># food allergy remission </span></span>
 <span id="cb9-154"><a href="#cb9-154" aria-hidden="true" tabindex="-1"></a>state_ar<span class="ot">&lt;-</span><span class="fu">define_state</span>(</span>
-<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a>  <span class="at">remission_cost=</span> <span class="dv">513</span><span class="sc">/</span><span class="dv">365</span>,</span>
+<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a>  <span class="at">remission_cost=</span> remission_cost_all ,</span>
 <span id="cb9-156"><a href="#cb9-156" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-157"><a href="#cb9-157" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-158"><a href="#cb9-158" aria-hidden="true" tabindex="-1"></a>  <span class="at">ambulance_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-159"><a href="#cb9-159" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_ED =</span> <span class="dv">0</span>,</span>
 <span id="cb9-160"><a href="#cb9-160" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_hospitalized =</span><span class="dv">0</span>,</span>
-<span id="cb9-161"><a href="#cb9-161" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span><span class="fl">0.93</span>,</span>
+<span id="cb9-161"><a href="#cb9-161" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span>utility_far,</span>
 <span id="cb9-162"><a href="#cb9-162" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_total =</span> <span class="fu">discount</span>(remission_cost, <span class="at">r=</span>dr),</span>
 <span id="cb9-163"><a href="#cb9-163" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility_total =</span> <span class="fu">discount</span>(utility, <span class="at">r=</span>dr)</span>
 <span id="cb9-164"><a href="#cb9-164" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -344,12 +344,12 @@ The following object is masked from 'package:purrr':
 <span id="cb9-166"><a href="#cb9-166" aria-hidden="true" tabindex="-1"></a><span class="co"># non-severe reaction</span></span>
 <span id="cb9-167"><a href="#cb9-167" aria-hidden="true" tabindex="-1"></a>state_ns<span class="ot">&lt;-</span><span class="fu">define_state</span>(</span>
 <span id="cb9-168"><a href="#cb9-168" aria-hidden="true" tabindex="-1"></a>  <span class="at">remission_cost=</span> <span class="dv">0</span>,</span>
-<span id="cb9-169"><a href="#cb9-169" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> <span class="dv">1254</span><span class="sc">/</span><span class="dv">365</span>,</span>
+<span id="cb9-169"><a href="#cb9-169" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> medical_cost_ns,</span>
 <span id="cb9-170"><a href="#cb9-170" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-171"><a href="#cb9-171" aria-hidden="true" tabindex="-1"></a>  <span class="at">ambulance_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-172"><a href="#cb9-172" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_ED =</span> <span class="dv">0</span>,</span>
 <span id="cb9-173"><a href="#cb9-173" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_hospitalized =</span><span class="dv">0</span>,</span>
-<span id="cb9-174"><a href="#cb9-174" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span> <span class="fl">0.92</span>,</span>
+<span id="cb9-174"><a href="#cb9-174" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span> utility_fa,</span>
 <span id="cb9-175"><a href="#cb9-175" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_total =</span> <span class="fu">discount</span>(medical_cost, <span class="at">r=</span>dr),</span>
 <span id="cb9-176"><a href="#cb9-176" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility_total =</span> <span class="fu">discount</span>(utility, <span class="at">r=</span>dr)</span>
 <span id="cb9-177"><a href="#cb9-177" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -357,12 +357,12 @@ The following object is masked from 'package:purrr':
 <span id="cb9-179"><a href="#cb9-179" aria-hidden="true" tabindex="-1"></a><span class="co">#severe allergic reaction-watch and waiting </span></span>
 <span id="cb9-180"><a href="#cb9-180" aria-hidden="true" tabindex="-1"></a>state_sw<span class="ot">&lt;-</span><span class="fu">define_state</span>(</span>
 <span id="cb9-181"><a href="#cb9-181" aria-hidden="true" tabindex="-1"></a>  <span class="at">remission_cost=</span> <span class="dv">0</span>,</span>
-<span id="cb9-182"><a href="#cb9-182" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> <span class="dv">1254</span><span class="sc">/</span><span class="dv">365</span>,</span>
-<span id="cb9-183"><a href="#cb9-183" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment_cost =</span> <span class="dv">95</span>,</span>
+<span id="cb9-182"><a href="#cb9-182" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> medical_cost_ns,</span>
+<span id="cb9-183"><a href="#cb9-183" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment_cost =</span> treatment_cost_ww,</span>
 <span id="cb9-184"><a href="#cb9-184" aria-hidden="true" tabindex="-1"></a>  <span class="at">ambulance_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-185"><a href="#cb9-185" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_ED =</span> <span class="dv">0</span>,</span>
 <span id="cb9-186"><a href="#cb9-186" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_hospitalized =</span><span class="dv">0</span>,</span>
-<span id="cb9-187"><a href="#cb9-187" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span> <span class="fl">0.83</span>,</span>
+<span id="cb9-187"><a href="#cb9-187" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span> utility_sr,</span>
 <span id="cb9-188"><a href="#cb9-188" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_total =</span> <span class="fu">discount</span>(medical_cost<span class="sc">+</span>treatment_cost, <span class="at">r=</span>dr),</span>
 <span id="cb9-189"><a href="#cb9-189" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility_total =</span> <span class="fu">discount</span>(utility, <span class="at">r=</span>dr)</span>
 <span id="cb9-190"><a href="#cb9-190" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -371,14 +371,14 @@ The following object is masked from 'package:purrr':
 <span id="cb9-193"><a href="#cb9-193" aria-hidden="true" tabindex="-1"></a><span class="co">#medical cost =direct cost of food allergy/year+ED medical cost</span></span>
 <span id="cb9-194"><a href="#cb9-194" aria-hidden="true" tabindex="-1"></a>state_sED<span class="ot">&lt;-</span> <span class="fu">define_state</span>(</span>
 <span id="cb9-195"><a href="#cb9-195" aria-hidden="true" tabindex="-1"></a>  <span class="at">remission_cost=</span> <span class="dv">0</span>,</span>
-<span id="cb9-196"><a href="#cb9-196" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> <span class="dv">1254</span><span class="sc">/</span><span class="dv">365</span>, </span>
+<span id="cb9-196"><a href="#cb9-196" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost =</span> medical_cost_ns, </span>
 <span id="cb9-197"><a href="#cb9-197" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment_cost =</span> <span class="fu">dispatch_strategy</span>(</span>
 <span id="cb9-198"><a href="#cb9-198" aria-hidden="true" tabindex="-1"></a>    <span class="at">ED_transfer =</span> treatment_cost_ED,</span>
-<span id="cb9-199"><a href="#cb9-199" aria-hidden="true" tabindex="-1"></a>    <span class="at">watch_wait =</span> <span class="fl">0.8</span>),</span>
-<span id="cb9-200"><a href="#cb9-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">ambulance_cost =</span> <span class="dv">848</span>,</span>
-<span id="cb9-201"><a href="#cb9-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_ED =</span> <span class="dv">331</span>,</span>
+<span id="cb9-199"><a href="#cb9-199" aria-hidden="true" tabindex="-1"></a>    <span class="at">watch_wait =</span> treatment_cost_ww_ED),</span>
+<span id="cb9-200"><a href="#cb9-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">ambulance_cost =</span> ambulance_cost_ED_ED,</span>
+<span id="cb9-201"><a href="#cb9-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_ED =</span> medical_cost_ED_ED,</span>
 <span id="cb9-202"><a href="#cb9-202" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_hospitalized =</span><span class="dv">0</span>,</span>
-<span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span><span class="fl">0.83</span>,</span>
+<span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span>utility_sr,</span>
 <span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_total =</span> <span class="fu">discount</span>(medical_cost <span class="sc">+</span> treatment_cost <span class="sc">+</span> ambulance_cost <span class="sc">+</span> medical_cost_ED , <span class="at">r=</span>dr),</span>
 <span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility_total =</span> <span class="fu">discount</span>(utility, <span class="at">r=</span>dr)</span>
 <span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -390,8 +390,8 @@ The following object is masked from 'package:purrr':
 <span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a>  <span class="at">ambulance_cost =</span> <span class="dv">0</span>,</span>
 <span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_ED =</span> <span class="dv">0</span>,</span>
-<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_hospitalized =</span><span class="dv">1866</span>,</span>
-<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span> <span class="fl">0.83</span>,</span>
+<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a>  <span class="at">medical_cost_hospitalized =</span>medical_cost_hospital,</span>
+<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility =</span>utility_sr,</span>
 <span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_total =</span> <span class="fu">discount</span>(medical_cost_hospitalized,<span class="at">r=</span>dr),</span>
 <span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a>  <span class="at">utility_total =</span> <span class="fu">discount</span>(utility, <span class="at">r=</span>dr)</span>
 <span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -455,7 +455,7 @@ The following object is masked from 'package:purrr':
 <span id="cb9-277"><a href="#cb9-277" aria-hidden="true" tabindex="-1"></a>                     <span class="at">state_faf=</span> <span class="dv">0</span>,</span>
 <span id="cb9-278"><a href="#cb9-278" aria-hidden="true" tabindex="-1"></a>                     <span class="at">state_acm=</span><span class="dv">0</span>)</span>
 <span id="cb9-279"><a href="#cb9-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-280"><a href="#cb9-280" aria-hidden="true" tabindex="-1"></a><span class="co">#run model for X10 mortality in wath and wait </span></span>
+<span id="cb9-280"><a href="#cb9-280" aria-hidden="true" tabindex="-1"></a><span class="co">#run model for X10 mortality in watch and wait </span></span>
 <span id="cb9-281"><a href="#cb9-281" aria-hidden="true" tabindex="-1"></a>allergy_mod_10<span class="ot">&lt;-</span><span class="fu">run_model</span>(</span>
 <span id="cb9-282"><a href="#cb9-282" aria-hidden="true" tabindex="-1"></a>                <span class="at">parameters =</span> par_allerg_10,</span>
 <span id="cb9-283"><a href="#cb9-283" aria-hidden="true" tabindex="-1"></a>                <span class="at">ED_transfer =</span> strategy_ED,</span>
@@ -468,8 +468,8 @@ The following object is masked from 'package:purrr':
 <span id="cb9-290"><a href="#cb9-290" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="build-the-societa-model" class="level3">
-<h3 class="anchored" data-anchor-id="build-the-societa-model">Build the societa model</h3>
+<section id="build-the-societal-model" class="level3">
+<h3 class="anchored" data-anchor-id="build-the-societal-model">Build the societal model</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## societal perspective </span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># food allergy remission </span></span>
@@ -1113,11 +1113,13 @@ the `.groups` argument.</code></pre>
 <span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a><span class="co">#run sensitivity analysis </span></span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>allergy_dsa<span class="ot">&lt;-</span><span class="fu">run_dsa</span>(</span>
-<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> allergy_mod_10,</span>
-<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">dsa =</span> allergy_sa</span>
-<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="co">#run sensitivity analysis </span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>allergy_dsa<span class="ot">&lt;-</span><span class="fu">run_dsa</span>(</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> allergy_mod_10,</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">dsa =</span> allergy_sa</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Running DSA on strategy 'ED_transfer'...</code></pre>
 </div>
@@ -1209,21 +1211,21 @@ the `.groups` argument.</code></pre>
 # A tibble: 15 × 5
    .par_names            Lower_Bound Upper_Bound UL_Difference parameter        
    &lt;chr&gt;                       &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            
- 1 ambulance_cost_ED_ED     5741910.    5741910.            0  ambulance cost(+…
- 2 medical_cost_ED_ED       5741910.    5741910.            0  medical cost in …
- 3 medical_cost_hospital    5741910.    5741910.            0  cost for hospita…
- 4 medical_cost_ns          5741910.    5741910.            0  Daily medical co…
- 5 p_ns_ar                  5788345.    5695151.        93193. Annual remission…
- 6 p_severe                 5741670.    5742155.          485. Probability of t…
- 7 p_sh                     5741715.    5742105.          390. Probability of h…
- 8 p_sh_faf                 5741720.    5742099.          379. Food allergy fat…
- 9 remission_cost_all       5741910.    5741910.            0  Daily cost for f…
-10 treatment_cost_ED        5442630.    5992185.       549555. Epinephrine cost…
-11 treatment_cost_ww        5741910.    5741910.            0  Epinephrine cost…
-12 treatment_cost_ww_ED     5741910.    5741910.            0  Epinephrine cost…
-13 utility_fa               5741910.    5741910.            0  QALY for food al…
-14 utility_far              5741910.    5741910.            0  QALY for food al…
-15 utility_sr               5741910.    5741910.            0  QALY for severe …
+ 1 ambulance_cost_ED_ED     4890998.    6592822.  1701824.     ambulance cost(+…
+ 2 medical_cost_ED_ED       5409773.    6074047.   664273.     medical cost in …
+ 3 medical_cost_hospital    5741910.    5741910.        0.0183 cost for hospita…
+ 4 medical_cost_ns          5741910.    5741911.        1.12   Daily medical co…
+ 5 p_ns_ar                  5788345.    5695151.    93193.     Annual remission…
+ 6 p_severe                 5741670.    5742155.      485.     Probability of t…
+ 7 p_sh                     5741715.    5742105.      390.     Probability of h…
+ 8 p_sh_faf                 5741720.    5742099.      379.     Food allergy fat…
+ 9 remission_cost_all       5741910.    5741910.        0.0451 Daily cost for f…
+10 treatment_cost_ED        5442630.    5992185.   549555.     Epinephrine cost…
+11 treatment_cost_ww        5837236.    5646584.   190652.     Epinephrine cost…
+12 treatment_cost_ww_ED     5742041.    5741779.      261.     Epinephrine cost…
+13 utility_fa               7020598.    5320581.  1700017.     QALY for food al…
+14 utility_far              5846089.    5703658.   142431.     QALY for food al…
+15 utility_sr               5742174.    5741646.      527.     QALY for severe …
 
 [[2]]</code></pre>
 </div>

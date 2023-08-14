@@ -3,7 +3,9 @@ title: "allergy_EAI_SA"
 format: html
 editor: visual
 ---
+
 ### build the base model
+
 ```{r}
 library(tidyverse)
 library(heemod)
@@ -182,13 +184,13 @@ Transition_watch <- define_transition(
 
 # food allergy remission 
 state_ar<-define_state(
-  remission_cost= 513/365,
+  remission_cost= remission_cost_all ,
   medical_cost = 0,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
   medical_cost_hospitalized =0,
-  utility =0.93,
+  utility =utility_far,
   cost_total = discount(remission_cost, r=dr),
   utility_total = discount(utility, r=dr)
 )
@@ -196,12 +198,12 @@ state_ar<-define_state(
 # non-severe reaction
 state_ns<-define_state(
   remission_cost= 0,
-  medical_cost = 1254/365,
+  medical_cost = medical_cost_ns,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
   medical_cost_hospitalized =0,
-  utility = 0.92,
+  utility = utility_fa,
   cost_total = discount(medical_cost, r=dr),
   utility_total = discount(utility, r=dr)
 )
@@ -209,12 +211,12 @@ state_ns<-define_state(
 #severe allergic reaction-watch and waiting 
 state_sw<-define_state(
   remission_cost= 0,
-  medical_cost = 1254/365,
-  treatment_cost = 95,
+  medical_cost = medical_cost_ns,
+  treatment_cost = treatment_cost_ww,
   ambulance_cost = 0,
   medical_cost_ED = 0,
   medical_cost_hospitalized =0,
-  utility = 0.83,
+  utility = utility_sr,
   cost_total = discount(medical_cost+treatment_cost, r=dr),
   utility_total = discount(utility, r=dr)
 )
@@ -223,14 +225,14 @@ state_sw<-define_state(
 #medical cost =direct cost of food allergy/year+ED medical cost
 state_sED<- define_state(
   remission_cost= 0,
-  medical_cost = 1254/365, 
+  medical_cost = medical_cost_ns, 
   treatment_cost = dispatch_strategy(
     ED_transfer = treatment_cost_ED,
-    watch_wait = 0.8),
-  ambulance_cost = 848,
-  medical_cost_ED = 331,
+    watch_wait = treatment_cost_ww_ED),
+  ambulance_cost = ambulance_cost_ED_ED,
+  medical_cost_ED = medical_cost_ED_ED,
   medical_cost_hospitalized =0,
-  utility =0.83,
+  utility =utility_sr,
   cost_total = discount(medical_cost + treatment_cost + ambulance_cost + medical_cost_ED , r=dr),
   utility_total = discount(utility, r=dr)
 )
@@ -242,8 +244,8 @@ state_sh<-define_state(
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
-  medical_cost_hospitalized =1866,
-  utility = 0.83,
+  medical_cost_hospitalized =medical_cost_hospital,
+  utility =utility_sr,
   cost_total = discount(medical_cost_hospitalized,r=dr),
   utility_total = discount(utility, r=dr)
 )
@@ -307,7 +309,7 @@ time0 <- define_init(state_ar = 0,
                      state_faf= 0,
                      state_acm=0)
 
-#run model for X10 mortality in wath and wait 
+#run model for X10 mortality in watch and wait 
 allergy_mod_10<-run_model(
                 parameters = par_allerg_10,
                 ED_transfer = strategy_ED,
@@ -318,9 +320,9 @@ allergy_mod_10<-run_model(
                 effect = utility,
                 central_strategy ="ED_transfer"
 )
-
 ```
-### Build the societa model 
+
+### Build the societal model
 
 ```{r}
 ## societal perspective 
@@ -487,7 +489,9 @@ allergy_mod_10_societal<-run_model(
   central_strategy ="ED_transfer"
 )
 ```
-### run the analysis for X100, X500,X1000 fatality in watch and wait 
+
+### run the analysis for X100, X500,X1000 fatality in watch and wait
+
 ```{r}
 #run model for X100 mortality in wath and wait  
 allergy_mod_100<-run_model(
@@ -523,7 +527,9 @@ allergy_mod_1000<-run_model(
   central_strategy ="ED_transfer"
 )
 ```
+
 ### Table for the analysis of X100, X500, X1000
+
 ```{r}
 summary(allergy_mod_10 )
 summary(allergy_mod_100)
@@ -648,12 +654,16 @@ final_Table_societal<-final_Table_societal %>% rename(
 )
 
 ```
+
 ### final summary table for different fatality scenario
+
 ```{r}
 print(final_Table)
 print(final_Table_societal)
 ```
-### dsa analysis 
+
+### dsa analysis
+
 ```{r}
 # sensitivity analysis parameter 
 allergy_sa<-define_dsa(
@@ -675,12 +685,15 @@ allergy_sa<-define_dsa(
   
 )
 
+
+
 #run sensitivity analysis 
 allergy_dsa<-run_dsa(
   model = allergy_mod_10,
   dsa = allergy_sa
 )
 ```
+
 ### Build tornado plot for SA result
 
 ```{r}
@@ -751,8 +764,12 @@ tornado_plot <- function(df, refer_value){
   
   list(df,p)
 }
+
+
 ```
+
 ###tornado_plot for the model
+
 ```{r}
 tornado_plot(allergy_dsa$dsa, cost_per_year_life_saved_ref)
 ```
