@@ -1062,31 +1062,53 @@ the `.groups` argument.</code></pre>
 <section id="final-summary-table-for-different-fatality-scenario" class="level3">
 <h3 class="anchored" data-anchor-id="final-summary-table-for-different-fatality-scenario">final summary table for different fatality scenario</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(final_Table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">as.data.frame</span>(final_Table))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 7
-  scenario    strategy_name cost_total QALYs_total increment_cost increment_Qaly
-  &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;chr&gt;         
-1 10 times m… ED_transfer   20080.162… 6723.33399… reference      reference     
-2 10 times m… watch_wait    18927.971… 6723.33379… -1152.1906573… -0.0002006633…
-3 100 times … ED_transfer   20080.162… 6723.33399… reference      reference     
-4 100 times … watch_wait    18927.965… 6723.33179… -1152.1966823… -0.0022074939…
-5 500 times … ED_transfer   20080.162… 6723.33399… reference      reference     
-6 500 times … watch_wait    18927.938… 6723.32286… -1152.2234731… -0.0111310910…
-7 1000 times… ED_transfer   20080.162… 6723.33399… reference      reference     
-8 1000 times… watch_wait    18927.905… 6723.31170… -1152.2569917… -0.0222955877…
-# ℹ 1 more variable: increment_cost_per_life_saved &lt;chr&gt;</code></pre>
+<pre><code>                                scenario strategy_name       cost_total
+1   10 times mortality in watch and wait   ED_transfer 20080.1623648999
+2   10 times mortality in watch and wait    watch_wait 18927.9717075809
+3  100 times mortality in watch and wait   ED_transfer 20080.1623648999
+4  100 times mortality in watch and wait    watch_wait 18927.9656825744
+5  500 times mortality in watch and wait   ED_transfer 20080.1623648999
+6  500 times mortality in watch and wait    watch_wait 18927.9388917089
+7 1000 times mortality in watch and wait   ED_transfer 20080.1623648999
+8 1000 times mortality in watch and wait    watch_wait 18927.9053731048
+       QALYs_total    increment_cost        increment_Qaly
+1 6723.33399865793         reference             reference
+2 6723.33379799463 -1152.19065731904 -0.000200663304894988
+3 6723.33399865793         reference             reference
+4 6723.33179116397 -1152.19668232554  -0.00220749395975872
+5 6723.33399865793         reference             reference
+6 6723.32286756683 -1152.22347319096   -0.0111310910988323
+7 6723.33399865793         reference             reference
+8 6723.31170307014 -1152.25699179513   -0.0222955877961795
+  increment_cost_per_life_saved
+1                     reference
+2               5741910.1012116
+3                     reference
+4              521947.830131988
+5                     reference
+6               103513.97387376
+7                     reference
+8              51680.9425402355</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(final_Table_societal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">as.data.frame</span> (final_Table_societal))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 7
-  scenario    strategy_name cost_total QALYs_total increment_cost increment_Qaly
-  &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;chr&gt;         
-1 10 times m… ED_transfer   20080.162… 6723.33399… reference      reference     
-2 10 times m… watch_wait    18927.971… 6723.33379… -1152.1906573… -0.0002006633…
-3 sociatal_1… ED_transfer   157540.66… 6723.33399… reference      reference     
-4 sociatal_1… watch_wait    156206.46… 6723.33379… -1334.2014647… -0.0002006633…
-# ℹ 1 more variable: increment_cost_per_life_saved &lt;chr&gt;</code></pre>
+<pre><code>                                       scenario strategy_name       cost_total
+1          10 times mortality in watch and wait   ED_transfer 20080.1623648999
+2          10 times mortality in watch and wait    watch_wait 18927.9717075809
+3 sociatal_10 times mortality in watch and wait   ED_transfer  157540.66704348
+4 sociatal_10 times mortality in watch and wait    watch_wait 156206.465578724
+       QALYs_total    increment_cost        increment_Qaly
+1 6723.33399865793         reference             reference
+2 6723.33379799463 -1152.19065731904 -0.000200663304894988
+3 6723.33399865793         reference             reference
+4 6723.33379799463 -1334.20146475636 -0.000200663304894988
+  increment_cost_per_life_saved
+1                     reference
+2               5741910.1012116
+3                     reference
+4              6648955.89881061</code></pre>
 </div>
 </div>
 </section>

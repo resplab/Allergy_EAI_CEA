@@ -658,8 +658,8 @@ final_Table_societal<-final_Table_societal %>% rename(
 ### final summary table for different fatality scenario
 
 ```{r}
-print(final_Table)
-print(final_Table_societal)
+print(as.data.frame(final_Table))
+print(as.data.frame (final_Table_societal))
 ```
 
 ### dsa analysis

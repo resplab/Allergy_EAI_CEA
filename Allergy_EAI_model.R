@@ -59,14 +59,15 @@ remission_cost_all = 513/365, #daily remission patient cost for all scenario
 medical_cost_ns =1254/365, #daily medical cost for canadian with food allergy
 ambulance_cost_ED_ED = 848,# ambulance cost 
 medical_cost_ED_ED = 331, #medical cost in ED 
+medical_cost_hospital =1866, #medical cost hospitalized
 utility_far =0.93, # food allergy remission utility
 utility_fa = 0.92, # food allergy utility 
 utility_sr= 0.83, #utility severe reaction 
-indirect_cost_fa= 8413/365, # indirect cost for food allergy 
-out_of_pocket_cost_fa = 2251/365, # out of pocket cost for food allergy 
-indrect_cost_hospitalization = 251,# indirect cost in hospitalization 
-out_of_pocket_ED = 97, #out of pocket in ED 
-indrect_cost_ED = 113  # indirect cost in ED 
+indirect_cost_allergy= 8413/365, # indirect cost for food allergy 
+out_of_pocket_cost_allergy = 2251/365, # out of pocket cost for food allergy 
+indrect_cost_hospital = 251,# indirect cost in hospitalization 
+out_of_pocket_emergency = 97, #out of pocket in ED 
+indrect_cost_emergency = 113  # indirect cost in ED 
   )
 
 #parameter for X100 mortality in watch and wait 
@@ -88,6 +89,7 @@ par_allerg_100<-modify(
   treatment_cost_ww_ED =0.8, #epinephrine cost for ED transfer in watch and wait scenario 
   remission_cost_all = 513/365, #daily remission patient cost for all scenario
   medical_cost_ns =1254/365, #daily medical cost for canadian with food allergy
+  medical_cost_hospital =1866, #medical cost hospitalized
   ambulance_cost_ED_ED = 848,# ambulance cost 
   medical_cost_ED_ED = 331, #medical cost in ED 
   utility_far =0.93, # food allergy remission utility
@@ -114,6 +116,7 @@ par_allerg_500<-modify(
   treatment_cost_ww_ED =0.8, #epinephrine cost for ED transfer in watch and wait scenario 
   remission_cost_all = 513/365, #daily remission patient cost for all scenario
   medical_cost_ns =1254/365, #daily medical cost for canadian with food allergy
+  medical_cost_hospital =1866, #medical cost hospitalized
   ambulance_cost_ED_ED = 848,# ambulance cost 
   medical_cost_ED_ED = 331, #medical cost in ED 
   utility_far =0.93, # food allergy remission utility
@@ -139,6 +142,7 @@ par_allerg_1000<-modify(
   treatment_cost_ww_ED =0.8, #epinephrine cost for ED transfer in watch and wait scenario 
   remission_cost_all = 513/365, #daily remission patient cost for all scenario
   medical_cost_ns =1254/365, #daily medical cost for canadian with food allergy
+  medical_cost_hospital =1866, #medical cost hospitalized
   ambulance_cost_ED_ED = 848,# ambulance cost 
   medical_cost_ED_ED = 331, #medical cost in ED 
   utility_far =0.93, # food allergy remission utility
@@ -233,7 +237,7 @@ state_sh<-define_state(
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
-  medical_cost_hospitalized =1866,
+  medical_cost_hospitalized =medical_cost_hospital,
   utility =utility_sr,
   cost_total = discount(medical_cost_hospitalized,r=dr),
   utility_total = discount(utility, r=dr)
@@ -288,9 +292,9 @@ strategy_watch<- define_strategy(
   state_acm = state_acm
 )
 
-## societal prespective 
+## societal perspective 
 # food allergy remission 
-state_ar_social<-define_state(
+state_ar_societal<-define_state(
   remission_cost= remission_cost_all ,
   medical_cost = 0,
   treatment_cost = 0,
@@ -308,15 +312,15 @@ state_ar_social<-define_state(
 )
 
 # non-severe reaction
-state_ns_social<-define_state(
+state_ns_societal<-define_state(
   remission_cost= 0,
   medical_cost = medical_cost_ns,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
   medical_cost_hospitalized =0,
-  indirect_cost_fa= indirect_cost_fa, 
-  out_of_pocket_cost_fa = out_of_pocket_cost_fa, 
+  indirect_cost_fa= indirect_cost_allergy, 
+  out_of_pocket_cost_fa = out_of_pocket_cost_allergy, 
   indrect_cost_hospitalization = 0,
   out_of_pocket_ED = 0, 
   indrect_cost_ED = 0,
@@ -326,15 +330,15 @@ state_ns_social<-define_state(
 )
 
 #severe allergic reaction-watch and waiting 
-state_sw<-define_state(
+state_sw_societal<-define_state(
   remission_cost= 0,
   medical_cost = medical_cost_ns,
   treatment_cost = treatment_cost_ww,
   ambulance_cost = 0,
   medical_cost_ED = 0,
   medical_cost_hospitalized =0,
-  indirect_cost_fa= indirect_cost_fa, 
-  out_of_pocket_cost_fa = out_of_pocket_cost_fa, 
+  indirect_cost_fa= indirect_cost_allergy, 
+  out_of_pocket_cost_fa = out_of_pocket_cost_allergy, 
   indrect_cost_hospitalization = 0,
   out_of_pocket_ED = 0, 
   indrect_cost_ED = 0,  
@@ -345,7 +349,7 @@ state_sw<-define_state(
 
 #severe allergic reaction - ED transfer 
 #medical cost =direct cost of food allergy/year+ED medical cost
-state_sED<- define_state(
+state_sED_societal<- define_state(
   remission_cost= 0,
   medical_cost = medical_cost_ns, 
   treatment_cost = dispatch_strategy(
@@ -354,71 +358,91 @@ state_sED<- define_state(
   ambulance_cost = ambulance_cost_ED_ED,
   medical_cost_ED = medical_cost_ED_ED,
   medical_cost_hospitalized =0,
+  indirect_cost_fa= 0, 
+  out_of_pocket_cost_fa = 0, 
+  indrect_cost_hospitalization = 0,
+  out_of_pocket_ED = out_of_pocket_emergency, 
+  indrect_cost_ED = indrect_cost_emergency, 
   utility =utility_sr,
-  cost_total = discount(medical_cost + treatment_cost + ambulance_cost + medical_cost_ED , r=dr),
+  cost_total = discount(medical_cost + treatment_cost + ambulance_cost + medical_cost_ED + out_of_pocket_ED + indrect_cost_ED, r=dr),
   utility_total = discount(utility, r=dr)
 )
 
 #severe allergic reaction -hospitalized 
-state_sh<-define_state(
+state_sh_societal<-define_state(
   remission_cost= 0,
   medical_cost = 0,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
-  medical_cost_hospitalized =1866,
+  medical_cost_hospitalized =medical_cost_hospital,
+  indirect_cost_fa= 0, 
+  out_of_pocket_cost_fa = 0, 
+  indrect_cost_hospitalization = indrect_cost_hospital,
+  out_of_pocket_ED = 0, 
+  indrect_cost_ED = 0, 
   utility =utility_sr,
-  cost_total = discount(medical_cost_hospitalized,r=dr),
+  cost_total = discount(medical_cost_hospitalized + indrect_cost_hospitalization ,r=dr),
   utility_total = discount(utility, r=dr)
 )
 
 
 #food allergy fatality
-state_faf<-define_state(
+state_faf_societal<-define_state(
   remission_cost= 0,
   medical_cost =0, 
   medical_cost_hospitalized = 0,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
+  indirect_cost_fa= 0, 
+  out_of_pocket_cost_fa = 0, 
+  indrect_cost_hospitalization = 0,
+  out_of_pocket_ED = 0, 
+  indrect_cost_ED = 0, 
   utility = 0,
   cost_total = 0,
   utility_total = 0
 )
 
 #all-cause mortality
-state_acm<-define_state(
+state_acm_societal<-define_state(
   remission_cost= 0,
   medical_cost =0, 
   medical_cost_hospitalized = 0,
   treatment_cost = 0,
   ambulance_cost = 0,
   medical_cost_ED = 0,
+  indirect_cost_fa= 0, 
+  out_of_pocket_cost_fa = 0, 
+  indrect_cost_hospitalization = 0,
+  out_of_pocket_ED = 0, 
+  indrect_cost_ED = 0, 
   utility = 0,
   cost_total = 0,
   utility_total = 0
 )
 
-strategy_ED<-define_strategy(
+strategy_ED_societal<-define_strategy(
   transition = Transition_ED,
-  state_ar = state_ar,
-  state_ns = state_ns,
-  state_sw = state_sw,
-  state_sED = state_sED,
-  state_sh = state_sh,
-  state_faf = state_faf,
-  state_acm = state_acm
+  state_ar = state_ar_societal,
+  state_ns = state_ns_societal,
+  state_sw = state_sw_societal,
+  state_sED = state_sED_societal,
+  state_sh = state_sh_societal,
+  state_faf = state_faf_societal,
+  state_acm = state_acm_societal
 )
 
-strategy_watch<- define_strategy(
+strategy_watch_societal<- define_strategy(
   transition = Transition_watch,
-  state_ar = state_ar,
-  state_ns = state_ns,
-  state_sw = state_sw,
-  state_sED = state_sED,
-  state_sh = state_sh,
-  state_faf = state_faf,
-  state_acm = state_acm
+  state_ar = state_ar_societal,
+  state_ns = state_ns_societal,
+  state_sw = state_sw_societal,
+  state_sED = state_sED_societal,
+  state_sh = state_sh_societal,
+  state_faf = state_faf_societal,
+  state_acm = state_acm_societal
 )
 
 
@@ -440,6 +464,17 @@ allergy_mod_10<-run_model(
                 cost = cost_total,
                 effect = utility,
                 central_strategy ="ED_transfer"
+)
+#run model for X10 mortality in watch and wait in societal perspective 
+allergy_mod_10_societal<-run_model(
+  parameters = par_allerg_10,
+  ED_transfer = strategy_ED_societal,
+  watch_wait = strategy_watch_societal,
+  init = time0,
+  cycles = 20*365,
+  cost = cost_total,
+  effect = utility,
+  central_strategy ="ED_transfer"
 )
 
 #run model for X100 mortality in wath and wait  
@@ -481,14 +516,17 @@ summary(allergy_mod_10 )
 summary(allergy_mod_100)
 summary(allergy_mod_500)
 summary(allergy_mod_1000)
+summary(allergy_mod_10_societal)
 
 
 value_10<-get_values(allergy_mod_10)
 value_100<-get_values(allergy_mod_100)
 value_500<-get_values(allergy_mod_500)
 value_1000<-get_values(allergy_mod_1000)
+value_10_societal<-get_values(allergy_mod_10_societal)
 
 tmp <- get_counts(allergy_mod_10)
+tmp_societal<-get_counts(allergy_mod_10_societal)
 
 #get the count of food allergy mortality in the last markov cycle
 faf_watch_wait_last<-tmp$count[tmp$.strategy_names == "watch_wait" & tmp$model_time ==7300 & tmp$state_names == "state_faf"]
@@ -522,6 +560,11 @@ value_summary_1000<-value_1000 %>%
   summarize(sum=sum(value/10000)) %>% 
   pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
 
+value_summary_10_societal <-value_10_societal%>%   
+  group_by(.strategy_names, value_names) %>% 
+  summarize(sum=sum(value/10000)) %>% 
+  pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
+
 value_table_10<-value_summary_10 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
     mutate(Qaly_diff = utility- lag(utility)) %>%
@@ -550,14 +593,26 @@ value_table_1000<-value_summary_1000 %>%
   mutate(scenario ="1000 times mortality in watch and wait") %>%
   select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
 
+value_table_10_societal<-value_summary_10_societal %>% 
+  mutate(cost_diff = cost_total- lag(cost_total)) %>%
+  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
+  mutate(scenario ="sociatal_10 times mortality in watch and wait") %>%
+  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
 
 #calculate the cost per year life saved in base allergy model
 cost_per_year_life_saved_ref<-value_table_10$cost_per_life_saved[value_table_10$.strategy_names == "watch_wait"]
-
 final_Table<-bind_rows(value_table_10,value_table_100,value_table_500,value_table_1000)  
+
+#calculate the cost per year life saved in base allergy model-societal
+cost_per_year_life_saved_ref_societal<-value_table_10_societal$cost_per_life_saved[value_table_10_societal$.strategy_names == "watch_wait"]
+final_Table_societal<-bind_rows(value_table_10,value_table_10_societal)  
 
 final_Table<-final_Table %>% mutate_if(is.numeric, as.character) 
 final_Table <-replace(final_Table, is.na(final_Table),"reference") 
+
+final_Table_societal<-final_Table_societal %>% mutate_if(is.numeric, as.character) 
+final_Table_societal <-replace(final_Table_societal, is.na(final_Table_societal),"reference") 
 
 final_Table<-final_Table %>% rename(
   "strategy_name"= ".strategy_names",
@@ -568,8 +623,18 @@ final_Table<-final_Table %>% rename(
   
 )
 
+final_Table_societal<-final_Table_societal %>% rename(
+  "strategy_name"= ".strategy_names",
+  "QALYs_total" = "utility",
+  "increment_cost" = "cost_diff",
+  "increment_Qaly" = "Qaly_diff",
+  "increment_cost_per_life_saved" = "cost_per_life_saved"
+  
+)
+
 #final summary table for different fatality scenario
-print(final_Table)
+print(as.data.frame(final_Table))
+print(as.data.frame (final_Table_societal))
 
 # sensitivity analysis parameter 
 allergy_sa<-define_dsa(
@@ -586,7 +651,8 @@ allergy_sa<-define_dsa(
   medical_cost_ED_ED, 331*0.8,331*1.2,
   utility_far, 0.93*0.8, 1,
   utility_fa, 0.92 *0.8, 1,
-  utility_sr, 0.83*0.8, 0.83*1.2
+  utility_sr, 0.83*0.8, 0.83*1.2,
+  medical_cost_hospital, 1866*0.8,1866*1.2
   
 )
 
@@ -617,7 +683,7 @@ tornado_plot <- function(df, refer_value){
   df$UL_Difference <- abs(df$Upper_Bound - df$Lower_Bound)
   base.value <- refer_value
   
-  dsa_names<-c("ambulance cost(+/-20%)", "medical cost in ED(+/-20%)","Daily medical cost in non severe reaction (+/-20%)", 
+  dsa_names<-c("ambulance cost(+/-20%)", "medical cost in ED(+/-20%)","cost for hospitalization","Daily medical cost in non severe reaction (+/-20%)", 
     "Annual remission probability  (+/-20%)","Probability of transition to severe exacerbation (+/-20%)", "Probability of hospitalization (+/-20%)",
     "Food allergy fatality among hospitalized patient (+/-20%)","Daily cost for food allergy remisison (+/-20%)",
     "Epinephrine cost in ED for ED transfer scenario (0.8, 95)", "Epinephrine cost in watch_wate state(+/-20%)", 
