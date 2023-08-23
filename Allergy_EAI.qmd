@@ -67,9 +67,9 @@ medical_cost_ns =1254/365, #daily medical cost for canadian with food allergy
 ambulance_cost_ED_ED = 848,# ambulance cost 
 medical_cost_ED_ED = 331, #medical cost in ED 
 medical_cost_hospital =1866, #medical cost hospitalized
-utility_far =0.93, # food allergy remission utility
-utility_fa = 0.92, # food allergy utility 
-utility_sr= 0.83, #utility severe reaction 
+utility_far =0.93/365, # food allergy remission utility
+utility_fa = 0.92/365, # food allergy utility 
+utility_sr= 0.83/365, #utility severe reaction 
 indirect_cost_allergy= 8413/365, # indirect cost for food allergy 
 out_of_pocket_cost_allergy = 2251/365, # out of pocket cost for food allergy 
 indrect_cost_hospital = 251,# indirect cost in hospitalization 
@@ -99,9 +99,9 @@ par_allerg_100<-modify(
   medical_cost_hospital =1866, #medical cost hospitalized
   ambulance_cost_ED_ED = 848,# ambulance cost 
   medical_cost_ED_ED = 331, #medical cost in ED 
-  utility_far =0.93, # food allergy remission utility
-  utility_fa = 0.92, # food allergy utility 
-  utility_sr= 0.83, #utility severe reaction
+  utility_far =0.93/365, # food allergy remission utility
+  utility_fa = 0.92/365, # food allergy utility 
+  utility_sr= 0.83/365, #utility severe reaction
 )
 
 #parameter for X500 mortality in watch and wait 
@@ -126,9 +126,9 @@ par_allerg_500<-modify(
   medical_cost_hospital =1866, #medical cost hospitalized
   ambulance_cost_ED_ED = 848,# ambulance cost 
   medical_cost_ED_ED = 331, #medical cost in ED 
-  utility_far =0.93, # food allergy remission utility
-  utility_fa = 0.92, # food allergy utility 
-  utility_sr= 0.83, #utility severe reaction
+  utility_far =0.93/365, # food allergy remission utility
+  utility_fa = 0.92/365, # food allergy utility 
+  utility_sr= 0.83/365, #utility severe reaction
 )
 #parameter for X1000 mortality in watch and wait 
 par_allerg_1000<-modify(
@@ -152,9 +152,9 @@ par_allerg_1000<-modify(
   medical_cost_hospital =1866, #medical cost hospitalized
   ambulance_cost_ED_ED = 848,# ambulance cost 
   medical_cost_ED_ED = 331, #medical cost in ED 
-  utility_far =0.93, # food allergy remission utility
-  utility_fa = 0.92, # food allergy utility 
-  utility_sr= 0.83, #utility severe reaction
+  utility_far =0.93/365, # food allergy remission utility
+  utility_fa = 0.92/365, # food allergy utility 
+  utility_sr= 0.83/365, #utility severe reaction
 )
 #transition matrix for ED transfer 
 Transition_ED <- define_transition(
@@ -320,6 +320,7 @@ allergy_mod_10<-run_model(
                 effect = utility,
                 central_strategy ="ED_transfer"
 )
+summary(allergy_mod_10)
 ```
 
 ### Build the societal model
@@ -678,10 +679,11 @@ allergy_sa<-define_dsa(
   medical_cost_ns, 1254/365 *0.8, 1254/365*1.2,
   ambulance_cost_ED_ED, 848*0.8,848*1.2,
   medical_cost_ED_ED, 331*0.8,331*1.2,
-  utility_far, 0.93*0.8, 1,
-  utility_fa, 0.92 *0.8, 1,
-  utility_sr, 0.83*0.8, 0.83*1.2,
+  utility_far, 0.93/365*0.8, 0.93/365*1.2,
+  utility_fa, 0.92/365 *0.8, 0.92/365 *1.2,
+  utility_sr, 0.83/365*0.8, 0.83/365*1.2,
   medical_cost_hospital, 1866*0.8,1866*1.2
+  
   
 )
 
