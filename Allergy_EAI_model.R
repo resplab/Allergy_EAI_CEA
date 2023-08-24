@@ -121,7 +121,7 @@ par_allerg_500<-modify(
   medical_cost_ED_ED = 331, #medical cost in ED 
   utility_far =0.93/365, # food allergy remission utility
   utility_fa = 0.92/365, # food allergy utility 
-  utility_sr= 0.83, #utility severe reaction
+  utility_sr= 0.83/365, #utility severe reaction
 )
 #parameter for X1000 mortality in watch and wait 
 par_allerg_1000<-modify(
@@ -229,7 +229,7 @@ state_sED<- define_state(
   cost_total = discount(medical_cost + treatment_cost + ambulance_cost + medical_cost_ED , r=dr),
   utility_total = discount(utility, r=dr)
 )
-
+2999.2610880 *0.93/365 
 #severe allergic reaction -hospitalized 
 state_sh<-define_state(
   remission_cost= 0,
@@ -462,7 +462,7 @@ allergy_mod_10<-run_model(
                 init = time0,
                 cycles = 20*365,
                 cost = cost_total,
-                effect = utility,
+                effect = utility_total,
                 central_strategy ="ED_transfer"
 )
 #run model for X10 mortality in watch and wait in societal perspective 
@@ -473,7 +473,7 @@ allergy_mod_10_societal<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 
@@ -485,7 +485,7 @@ allergy_mod_100<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 #run model for X500 mortality in wath and wait 
@@ -496,7 +496,7 @@ allergy_mod_500<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 #run model for X1000 mortality in wath and wait 
@@ -507,10 +507,11 @@ allergy_mod_1000<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 
+get_values()
 
 summary(allergy_mod_10 )
 summary(allergy_mod_100)
@@ -518,6 +519,7 @@ summary(allergy_mod_500)
 summary(allergy_mod_1000)
 summary(allergy_mod_10_societal)
 
+plot(allergy_mod_10)
 
 value_10<-get_values(allergy_mod_10)
 value_100<-get_values(allergy_mod_100)
@@ -528,9 +530,20 @@ value_10_societal<-get_values(allergy_mod_10_societal)
 tmp <- get_counts(allergy_mod_10)
 tmp_societal<-get_counts(allergy_mod_10_societal)
 
+tmp %>% filter(.strategy_names =="ED_transfer", model_time == 7300)
+tmp %>% filter(.strategy_names =="watch_wait", model_time == 7300)
+
 #get the count of food allergy mortality in the last markov cycle
 faf_watch_wait_last<-tmp$count[tmp$.strategy_names == "watch_wait" & tmp$model_time ==7300 & tmp$state_names == "state_faf"]
 faf_ED_transfer_last<-tmp$count[tmp$.strategy_names == "ED_transfer" & tmp$model_time ==7300 & tmp$state_names == "state_faf"]
+sum(tmp$count[tmp$.strategy_names == "watch_wait" & tmp$state_names == "state_faf"])-
+sum(tmp$count[tmp$.strategy_names == "ED_transfer" & tmp$state_names == "state_faf"])
+
+value_10$value[value_10$.strategy_names =="watch_wait"&value_10$model_time ==7300 & value_10$value_name == "utility" ] - 
+value_10$value[value_10$.strategy_names =="ED_transfer"&value_10$model_time ==7300& value_10$value_name == "utility" ]
+
+c(tmp$count[tmp$.strategy_names == "watch_wait" & tmp$state_names == "state_faf"], tmp$count[tmp$.strategy_names == "ED_transfer" & tmp$state_names == "state_faf"], group_by(.))
+
 
 #calculate the fatality risk difference over 20 years 
 deatch_diff_base<-(faf_watch_wait_last- faf_ED_transfer_last)
@@ -542,7 +555,7 @@ tmp %>%
 #develop the table to compare the effect of different mortality in watch & wait
 value_summary_10<-value_10 %>%   
   group_by(.strategy_names, value_names) %>% 
-      summarize(sum=sum(value/10000)) %>% 
+      summarize(sum=sum(value/1000)) %>% 
         pivot_wider(names_from = value_names, values_from = sum) %>% ungroup()
 
 value_summary_100<-value_100 %>%   
@@ -567,38 +580,38 @@ value_summary_10_societal <-value_10_societal%>%
 
 value_table_10<-value_summary_10 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-    mutate(Qaly_diff = utility- lag(utility)) %>%
+    mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
       mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
         mutate(scenario ="10 times mortality in watch and wait") %>%
-          select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved) 
+          select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved) 
 
 value_table_100<-value_summary_100 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="100 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved) 
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved) 
 
 value_table_500<-value_summary_500 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="500 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved)
 
 value_table_1000<-value_summary_1000 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="1000 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved)
 
 value_table_10_societal<-value_summary_10_societal %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="sociatal_10 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved)
 
 #calculate the cost per year life saved in base allergy model
 cost_per_year_life_saved_ref<-value_table_10$cost_per_life_saved[value_table_10$.strategy_names == "watch_wait"]
@@ -616,7 +629,7 @@ final_Table_societal <-replace(final_Table_societal, is.na(final_Table_societal)
 
 final_Table<-final_Table %>% rename(
   "strategy_name"= ".strategy_names",
-  "QALYs_total" = "utility",
+  "QALYs_total" = "utility_total",
   "increment_cost" = "cost_diff",
   "increment_Qaly" = "Qaly_diff",
   "increment_cost_per_life_saved" = "cost_per_life_saved"
@@ -625,7 +638,7 @@ final_Table<-final_Table %>% rename(
 
 final_Table_societal<-final_Table_societal %>% rename(
   "strategy_name"= ".strategy_names",
-  "QALYs_total" = "utility",
+  "QALYs_total" = "utility_total",
   "increment_cost" = "cost_diff",
   "increment_Qaly" = "Qaly_diff",
   "increment_cost_per_life_saved" = "cost_per_life_saved"
@@ -649,9 +662,9 @@ allergy_sa<-define_dsa(
   medical_cost_ns, 1254/365 *0.8, 1254/365*1.2,
   ambulance_cost_ED_ED, 848*0.8,848*1.2,
   medical_cost_ED_ED, 331*0.8,331*1.2,
-  utility_far, 0.93/365*0.8, 0.93/365*1.2,
-  utility_fa, 0.92/365 *0.8, 0.92/365 *1.2,
-  utility_sr, 0.83/365*0.8, 0.83/365*1.2,
+  utility_far, 0.93/365*0.8, 1/365,
+  utility_fa, 0.92/365*0.8, 1/365 ,
+  utility_sr, 0.83*0.8/365, 0.83*1.2/365,
   medical_cost_hospital, 1866*0.8,1866*1.2
   
 )
@@ -663,6 +676,7 @@ allergy_dsa<-run_dsa(
   model = allergy_mod_10,
   dsa = allergy_sa
 )
+
 
 #Build tornado plot for SA result
 tornado_plot <- function(df, refer_value){
@@ -736,4 +750,4 @@ tornado_plot <- function(df, refer_value){
 #tornado_plot for the model
 tornado_plot(allergy_dsa$dsa, cost_per_year_life_saved_ref)
 
-
+value_10%>% filter(value_names == "utility", model_time == 7300 ,.strategy_names == "ED_transfer") -value_10%>% filter(value_names == "utility", model_time == "7300",.strategy_names == "watch_wait")

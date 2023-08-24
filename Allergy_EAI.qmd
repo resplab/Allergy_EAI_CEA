@@ -317,7 +317,7 @@ allergy_mod_10<-run_model(
                 init = time0,
                 cycles = 20*365,
                 cost = cost_total,
-                effect = utility,
+                effect = utility_total,
                 central_strategy ="ED_transfer"
 )
 summary(allergy_mod_10)
@@ -486,7 +486,7 @@ allergy_mod_10_societal<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 ```
@@ -502,7 +502,7 @@ allergy_mod_100<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 #run model for X500 mortality in wath and wait 
@@ -513,7 +513,7 @@ allergy_mod_500<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 #run model for X1000 mortality in wath and wait 
@@ -524,7 +524,7 @@ allergy_mod_1000<-run_model(
   init = time0,
   cycles = 20*365,
   cost = cost_total,
-  effect = utility,
+  effect = utility_total,
   central_strategy ="ED_transfer"
 )
 ```
@@ -587,38 +587,38 @@ value_summary_10_societal <-value_10_societal%>%
 
 value_table_10<-value_summary_10 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-    mutate(Qaly_diff = utility- lag(utility)) %>%
+    mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
       mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
         mutate(scenario ="10 times mortality in watch and wait") %>%
-          select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved) 
+          select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved) 
 
 value_table_100<-value_summary_100 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="100 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved) 
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved) 
 
 value_table_500<-value_summary_500 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="500 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved)
 
 value_table_1000<-value_summary_1000 %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="1000 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved)
 
 value_table_10_societal<-value_summary_10_societal %>% 
   mutate(cost_diff = cost_total- lag(cost_total)) %>%
-  mutate(Qaly_diff = utility- lag(utility)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
   mutate(cost_per_life_saved= cost_diff/Qaly_diff) %>%
   mutate(scenario ="sociatal_10 times mortality in watch and wait") %>%
-  select(scenario, .strategy_names, cost_total,utility,cost_diff,Qaly_diff,cost_per_life_saved)
+  select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_life_saved)
 
 
 #calculate the cost per year life saved in base allergy model
@@ -638,7 +638,7 @@ final_Table_societal <-replace(final_Table_societal, is.na(final_Table_societal)
 
 final_Table<-final_Table %>% rename(
   "strategy_name"= ".strategy_names",
-  "QALYs_total" = "utility",
+  "QALYs_total" = "utility_total",
   "increment_cost" = "cost_diff",
   "increment_Qaly" = "Qaly_diff",
   "increment_cost_per_life_saved" = "cost_per_life_saved"
@@ -647,7 +647,7 @@ final_Table<-final_Table %>% rename(
 
 final_Table_societal<-final_Table_societal %>% rename(
   "strategy_name"= ".strategy_names",
-  "QALYs_total" = "utility",
+  "QALYs_total" = "utility_total",
   "increment_cost" = "cost_diff",
   "increment_Qaly" = "Qaly_diff",
   "increment_cost_per_life_saved" = "cost_per_life_saved"
