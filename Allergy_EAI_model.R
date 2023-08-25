@@ -229,7 +229,7 @@ state_sED<- define_state(
   cost_total = discount(medical_cost + treatment_cost + ambulance_cost + medical_cost_ED , r=dr),
   utility_total = discount(utility, r=dr)
 )
-2999.2610880 *0.93/365 
+
 #severe allergic reaction -hospitalized 
 state_sh<-define_state(
   remission_cost= 0,
@@ -542,8 +542,6 @@ sum(tmp$count[tmp$.strategy_names == "ED_transfer" & tmp$state_names == "state_f
 value_10$value[value_10$.strategy_names =="watch_wait"&value_10$model_time ==7300 & value_10$value_name == "utility" ] - 
 value_10$value[value_10$.strategy_names =="ED_transfer"&value_10$model_time ==7300& value_10$value_name == "utility" ]
 
-c(tmp$count[tmp$.strategy_names == "watch_wait" & tmp$state_names == "state_faf"], tmp$count[tmp$.strategy_names == "ED_transfer" & tmp$state_names == "state_faf"], group_by(.))
-
 
 #calculate the fatality risk difference over 20 years 
 deatch_diff_base<-(faf_watch_wait_last- faf_ED_transfer_last)
@@ -750,4 +748,3 @@ tornado_plot <- function(df, refer_value){
 #tornado_plot for the model
 tornado_plot(allergy_dsa$dsa, cost_per_year_life_saved_ref)
 
-value_10%>% filter(value_names == "utility", model_time == 7300 ,.strategy_names == "ED_transfer") -value_10%>% filter(value_names == "utility", model_time == "7300",.strategy_names == "watch_wait")
