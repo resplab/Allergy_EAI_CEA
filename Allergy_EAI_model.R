@@ -51,14 +51,13 @@ p_severe    = 0.087,
 p_ns_ar     = ar_age(age = age),                                     # transition from non-severe reaction to food allergy remission
 p_ns_sw_ww  = (1-0.14) * rescale_prob(p =p_severe, from = 365) ,     # non-severe reaction to severe reaction for watch and wait
 p_ns_sED_ww = 0.14 * rescale_prob(p = p_severe, from = 365),         # non-severe reaction to severe reaction transfer to ED for watch and wait
-p_sh_ED      = 0.001684833,                                                # transition from severe state to hospitalization 
-p_sh_ww      = 0.0193168,
-p_sED_faf   = 0,                                                     # transition from ED to food allergy fatality
+p_sh_ED      = 0.001684833,                                          # transition from severe state ED to hospitalization 
+p_sh_ww      = 0.0193168,                                            # transition from severe state watch & wait to hospitalization
 p_ns_sED_ED = rescale_prob(p =p_severe, from = 365),                 # transition from non-severe to ED
-p_sh_faf    = 0.0045,                                         # transition from hospitalization to food allergy fatality
+p_sh_faf    = 0.0045,                                                # transition from hospitalization to food allergy fatality
 acm         = look_up(data = life_table, Age = age,                  #daily all-cause mortality
                       value = "fatality_daily"),
-p_ww_faf    = 8.692562e-05,
+p_ww_faf    = 8.692562e-05,                                          #transition from watch and wait to food allergy fatality 
 dr          = rescale_prob( p=0.015, from = 365),                    #discount rate
 )
 
@@ -84,10 +83,6 @@ utility_sr                 = 0.83/365,                             # utility-sev
 
 )
 
-par_allerg_10<-modify(
-  par_allerg,
-  p_sw_faf    = rescale_prob(p = 2.29885E-04, from = 365)            # Watch and wait to food allergy fatality
-)
 
 # transition matrix for ED transfer 
 
@@ -102,7 +97,7 @@ Transition_ED <- define_transition(
   0,            0,      0,          0,           0,         0,           1
 )
 
-#transition matrix for watch and wait -patient will get hospitalized after ww 
+#transition matrix for watch and wait -patient will get hospitalized after watch and wait state
 Transition_watch <- define_transition(
   state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
   C,            0,      0,          0,           0,           0,           acm,
@@ -114,7 +109,7 @@ Transition_watch <- define_transition(
   0,            0,      0,          0,           0,           0,           1
 )  
 
-#transition matrix for watch and wait -patient will not get hospitallized after hospitalization)
+#transition matrix for watch and wait -patient will not get hospitalized after watch and wait state
 Transition_watch_no_hs <- define_transition(
   state_names = c("state_ar","state_ns", "state_sw", "state_sED", "state_sh", "state_faf","state_acm"),
   C,            0,      0,          0,           0,           0,           acm,
@@ -248,6 +243,7 @@ strategy_watch<- define_strategy(
   state_acm   = state_acm
 )
 
+#strategy for watch and wait not 
 strategy_watch_no_hs<- define_strategy(
   transition  = Transition_watch_no_hs,
   state_ar    = state_ar,
@@ -270,7 +266,7 @@ time0 <- define_init(state_ar  = 0,
 # Model for X10 mortality in watch and wait 
 
 allergy_mod_10<-run_model(
-  parameters  = par_allerg_10,
+  parameters  = par_allerg,
   ED_transfer = strategy_ED,
   watch_wait  = strategy_watch,
   init        = time0,
@@ -281,7 +277,7 @@ allergy_mod_10<-run_model(
 )
 
 allergy_mod_10_no_hs<-run_model(
-  parameters  = par_allerg_10,
+  parameters  = par_allerg,
   ED_transfer = strategy_ED,
   watch_wait  = strategy_watch_no_hs,
   init        = time0,
