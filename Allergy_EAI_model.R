@@ -607,8 +607,7 @@ allergy_sa<-define_dsa(
   utility_far,            0.93/365*0.8,          1/365, #utility max =1 
   utility_fa,             0.92/365*0.8,          1/365 ,
   utility_sr,             0.83*0.8/365,          0.83*1.2/365,
-  medical_cost_hospital,  1866*0.8,             1866*1.2,
-  dr,                     0,                     rescale_prob( p=0.03, from = 365)
+  medical_cost_hospital,  1866*0.8,             1866*1.2
   
 )
 
@@ -639,7 +638,7 @@ tornado_plot <- function(df, refer_value){
   df$UL_Difference <- abs(df$Upper_Bound - df$Lower_Bound)
   base.value <- refer_value
   
-  dsa_names<-c("ambulance cost(+/-20%)", "discount(0, 3%)", "medical cost in ED(+/-20%)","cost for hospitalization(+/-20%)","Daily medical cost in non severe reaction (+/-20%)", 
+  dsa_names<-c("ambulance cost(+/-20%)", "medical cost in ED(+/-20%)","cost for hospitalization(+/-20%)","Daily medical cost in non severe reaction (+/-20%)", 
     "Annual remission probability  (+/-20%)","Probability of transition to severe allergy reaction (+/-20%)", "Probability of hospitalization in ED scenario (+/-20%)",
     "Food allergy fatality among hospitalized patient (+/-20%)","Food allergy fatality among patients in watch and wait  (+/-20%)","Daily cost for food allergy remisison (+/-20%)",
     "Epinephrine cost in ED for ED transfer scenario (0.8, 95)", "Epinephrine cost in watch_wate state(+/-20%)", 
