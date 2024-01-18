@@ -47,38 +47,55 @@ ar_age<-function(age) {
 #parameter for transition 
 par_allerg<-modify(
 par_allerg,
-p_severe    = 0.087,
-p_ns_ar     = ar_age(age = age),                                     # transition from non-severe reaction to food allergy remission
-p_ns_sw_ww  = (1-0.14) * rescale_prob(p =p_severe, from = 365) ,     # non-severe reaction to severe reaction for watch and wait
-p_ns_sED_ww = 0.14 * rescale_prob(p = p_severe, from = 365),         # non-severe reaction to severe reaction transfer to ED for watch and wait
-p_sh_ED      = 0.001684833,                                          # transition from severe state ED to hospitalization 
-p_ns_sED_ED = rescale_prob(p =p_severe, from = 365),                 # transition from non-severe to ED
+p_severe    = 0.087,                                                     # transition from non-severe reaction to severe reaction 
+p_ns_ar_original = 0.058,
+p_ns_ar     = if_else(age <=6, rescale_prob(p_ns_ar_original,from = 365), 0), # transition from non-severe reaction to food allergy remission
+p_biphas    = 0.046,                                                     # have biphasitic reaction
+p_EAI       = 0.906,                                                     # patient with known food allergy having an EAI
+p_ns_sw_ww  = (p_EAI-p_biphas) * rescale_prob(p =p_severe, from = 365) , # non-severe reaction to severe reaction for watch and wait
+p_ns_sED_ww = (1-p_EAI+p_biphas) * rescale_prob(p = p_severe, from = 365),# non-severe reaction to severe reaction transfer to ED for watch and wait
+p_faf = 0.00000069,                                                      # food allergy fatality among patients with food allergy
 p_sh_faf    = 0.0045,                                                # transition from hospitalization to food allergy fatality
+p_sh_ED      = rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365)/p_sh_faf,  # transition from severe state ED to hospitalization 
+p_ns_sED_ED = rescale_prob(p =p_severe, from = 365),                 # transition from non-severe to ED in ED scenario
 acm         = look_up(data = life_table, Age = age,                  #daily all-cause mortality
                       value = "fatality_daily"),
-dr          = rescale_prob( p=0.015, from = 365),                    #discount rate
+dr          = rescale_prob( p=0.015, from = 365)                   #discount rate
 )
 
 
 # parameter for cost and utility
 par_allerg<-modify(
 par_allerg,
-treatment_cost_ED          = 0.8 +51.3,                            # epi treatment cost in ED 
+p_EAI_ED                   = 0.54,                                 # Probability of using an EAI prior to ED visit 
+treatment_cost_ED          = 0.8 +95 *p_EAI_ED,                    # epi treatment cost in ED 
 treatment_cost_ww          = 95,                                   # EAI treatment cost in watch and wait 
 treatment_cost_ww_ED       = 0.8,                                  # epi cost for ED transfer in watch and wait scenario 
-remission_cost_all         = 513/365,                              # remission patient daily cost for all scenario
-medical_cost_ns            = 1254/365,                             # daily medical cost for Canadian with food allergy
+remission_cost_all         = 569/365,                              # remission patient daily cost for all scenario
+medical_cost_ns_original   = 1393,                                 # yearly direct medical cost of food allergy < 18 yrs 
+medical_cost_original      = 304,                                  # Average cost of all-cause ED visit
+medical_cost_ED_ED         = round(medical_cost_original *1.09,digits = 0), # daily medical cost in ED 
+no_visit                   = 0.3,                                  # no.of ED visit per year
+medical_cost_ns            = round(((medical_cost_ns_original*1.068)-(medical_cost_ED_ED *no_visit )), digits = 0)/365,# daily medical cost for Canadian with food allergy
 ambulance_cost_ED_ED       = 848,                                  # ambulance cost 
-medical_cost_ED_ED         = 331,                                  # daily medical cost in ED 
-medical_cost_hospital      = 1866,                                 # medical cost hospitalized
-indirect_cost_allergy      = 8413/365,                             # indirect cost for food allergy-societal
-out_of_pocket_cost_allergy = 2251/365,                             # out of pocket cost for food allergy-societal 
+medical_h                  = 3670,                                 # total medical cost hospitalization for allergy
+length_stay                = 2.1,                                  # length of stay per admission 
+medical_cost_hospital      = round(1.068*medical_h/length_stay,digits = 0),         # medical cost hospitalized
+indirect_cost_allergy_original = 4173,                              # indirect cost for food allergy < 18 years
+out_of_pocket_allergy_original = 2440,                             # out of pocket cost of food allergy per year 
 indirect_cost_hospital      = 251,                                 # indirect cost in hospitalization - societal 
-out_of_pocket_emergency     = 97,                                  # out of pocket in ED-societal 
-indirect_cost_emergency     = 113,                                 # indirect cost in ED -societal 
-utility_far                = 0.93/365,                             # utility -food allergy remission 
-utility_fa                 = 0.92/365,                             # utility- food allergy non-severe
-utility_sr                 = 0.83/365,                             # utility-severe reaction 
+out_of_pocket_original      = 89,                                  # out of pocket cost 
+out_of_pocket_emergency     = round(out_of_pocket_original * 1.068, digits = 0),    # out of pocket in ED-societal 
+waiting_time_ED              = 3.6,                                #  waiting time in ED/ hours 
+indirect_cost_emergency     = round(waiting_time_ED*31.37,digits = 0),              # indirect cost in ED -societal 
+indirect_cost_allergy      = round(1.068*(indirect_cost_allergy_original-no_visit* indirect_cost_emergency), digits = 0) /365,   # indirect cost for food allergy-societal
+out_of_pocket_cost_allergy = round(1.068* (out_of_pocket_allergy_original-no_visit* indirect_cost_emergency), digits = 0) /365,   # out of pocket cost for food allergy-societal 
+utilify_far_original       = 0.93,
+utility_far                = utilify_far_original /365,                             # utility -food allergy remission 
+utility_fa_original        = 0.92,
+utility_sa                 = 0.91,
+utility_fa                 = utility_fa_original/365,                             # utility- food allergy non-severe
+utility_sr                 = utility_fa -(1-utility_sa)/365        # utility-severe reaction 
 
 )
 
@@ -245,7 +262,7 @@ time0 <- define_init(state_ar  = 0,
 # Model for X10 mortality in watch and wait 
 par_allerg_10<- modify(
   par_allerg,
-  p_ww_faf    = 8.69259e-05,                                          #transition from watch and wait to food allergy fatality 
+  p_ww_faf    = (10* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas)                                   #transition from watch and wait to food allergy fatality 
 )
 allergy_mod_10<-run_model(
   parameters  = par_allerg_10,
@@ -619,7 +636,7 @@ allergy_dsa<-run_dsa(
   dsa = allergy_sa
 )
 
-cost_per_year_QALY_saved_ref<-value_table_10$cost_per_QALY_saved[value_table_10$.strategy_names == "watch_wait"]
+cost_per_year_life_saved_ref<-value_table_10$cost_per_QALY_saved[value_table_10$.strategy_names == "watch_wait"]
 
 #Build tornado plot for SA result
 tornado_plot <- function(df, refer_value){
@@ -687,6 +704,41 @@ tornado_plot <- function(df, refer_value){
 
 #tornado_plot for the model
 tornado_plot(allergy_dsa$dsa, cost_per_year_life_saved_ref)
+
+
+
+
+psa_base<-define_psa(
+  p_severe ~ beta(66.3345,696.1314),
+  p_ns_ar_original ~ beta(47.4951,771.3863),
+  p_biphas ~ beta(183.5019,3805.6703),
+  p_EAI ~ beta(8.4940, 0.8813),
+  p_faf ~ beta(99.9999,144927335.2320),
+  p_sh_faf ~ beta(45.8194, 10136.2621),
+  p_EAI_ED ~ beta(7.6118, 6.4841),
+  medical_cost_ns_original ~ gamma(1393,13.93),
+  medical_cost_original~ gamma(304, 30.4),
+  ambulance_cost_ED_ED ~ gamma(848,84.8),
+  waiting_time_ED ~ gamma(3.6,6.8664),
+  medical_h ~ gamma(3670,367),
+  length_stay ~ lognormal (mean = 2.1 ,sd =2.7),
+  out_of_pocket_original~ gamma(89, 8.9),
+  no_visit ~ gamma(0.3,0.9),
+  indirect_cost_allergy_original ~gamma(4173, 417.3),
+  out_of_pocket_allergy_original ~ gamma(2440, 244),
+  utility_far_original ~ beta(8.7708,0.6602),
+  utility_fa_original ~ beta(7.0800, 0.6157),
+  utility_sa ~ beta(1.6689, 0.1651)
+)
+
+psa_result_1000<-run_psa(allergy_mod_10,psa_base, N= 1000)
+
+print(psa_result_1000)
+
+
+
+export_savi(psa_result_1000, folder = "/Users/yiweiyin/My Drive (yinyiweivv@gmail.com)/UBC/thesis/Allergy cost effective/Allergy_EAI_CEA")
+
 
 
 
