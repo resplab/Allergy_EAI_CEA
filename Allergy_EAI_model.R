@@ -5,6 +5,7 @@ library(diagram)
 library(ggplot2)
 
 
+
 # import the Canada 2020 life table with mortality value in all ages (both sex)
 
 life_table<-read.csv('./life_table_CAN_2020.csv')
@@ -60,7 +61,6 @@ p_sh_ED      = rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365
 p_ns_sED_ED = rescale_prob(p =p_severe, from = 365),                 # transition from non-severe to ED in ED scenario
 acm         = look_up(data = life_table, Age = age,                  #daily all-cause mortality
                       value = "fatality_daily"),
-dr          = rescale_prob( p=0.015, from = 365)                   #discount rate
 )
 
 
@@ -262,7 +262,8 @@ time0 <- define_init(state_ar  = 0,
 # Model for X10 mortality in watch and wait 
 par_allerg_10<- modify(
   par_allerg,
-  p_ww_faf    = (10* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas)                                   #transition from watch and wait to food allergy fatality 
+  p_ww_faf    = (10* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas),                                  #transition from watch and wait to food allergy fatality 
+  dr          = rescale_prob( p=0.015, from = 365)  
 )
 allergy_mod_10<-run_model(
   parameters  = par_allerg_10,
@@ -275,20 +276,7 @@ allergy_mod_10<-run_model(
   method = "beginning"
 )
 
-
-
-summary(allergy_mod_10)
-tmp<-get_counts(allergy_mod_10)
-
-
-
-#check the count in each state 
-tmp %>%   
-  group_by(.strategy_names, state_names) %>% 
-  summarize(avg=mean(count), sum=sum(count))
-
-a <-get_values(allergy_mod_10) %>%  group_by(.strategy_names, value_names) %>% 
-  summarize(avg=mean(value), sum=sum(value))
+summary
 
 
 ## Model X 100 mortality
@@ -296,7 +284,8 @@ a <-get_values(allergy_mod_10) %>%  group_by(.strategy_names, value_names) %>%
 #parameter for #parameter for X100 mortality in watch and wait 
 par_allerg_100<-modify(
   par_allerg,
-  p_ww_faf =0.0008803672 # Watch and wait to food allergy fatality X100, baseline 0.000002
+  p_ww_faf = (100* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas),# Watch and wait to food allergy fatality X100, baseline 0.000002
+  dr          = rescale_prob( p=0.015, from = 365)  
 )
 
 allergy_mod_100<-run_model(
@@ -315,7 +304,8 @@ summary(allergy_mod_100)
 #parameter for #parameter for X500 mortality in watch and wait 
 par_allerg_500<-modify(
   par_allerg,
-  p_ww_faf = 0.004406759 # Watch and wait to food allergy fatality X500, baseline 0.000002
+  p_ww_faf =  (500* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas), # Watch and wait to food allergy fatality X500, baseline 0.000002
+  dr          = rescale_prob( p=0.015, from = 365)  
 )
 
 allergy_mod_500<-run_model(
@@ -328,13 +318,13 @@ allergy_mod_500<-run_model(
   effect      = utility_total
 )
 
-summary(allergy_mod_500)
 
 ## Model X 1000 mortality
 # parameter for X 1000 mortality in watch and wait
 par_allerg_1000<-modify(
   par_allerg,
-  p_ww_faf =0.00881478 # Watch and wait to food allergy fatality X500, baseline 0.000002
+  p_ww_faf = (1000* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas), # Watch and wait to food allergy fatality X500, baseline 0.000002
+  dr          = rescale_prob( p=0.015, from = 365)  
 )
 
 allergy_mod_1000<-run_model(
@@ -347,7 +337,6 @@ allergy_mod_1000<-run_model(
   effect      = utility_total
 )
 
-summary(allergy_mod_1000)
 
 ##societal perspective -define state, 
 #add "indirect_cost for food allergy", "out of pocket cost for food allergy", 
@@ -519,7 +508,43 @@ allergy_mod_10_societal<-run_model(
   effect = utility_total
 )
 
-summary(allergy_mod_10_societal)
+
+# run base model for discount = 0% 
+par_allerg_dr_0<- modify(
+  par_allerg,
+  p_ww_faf    = (10* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas),                                  #transition from watch and wait to food allergy fatality 
+  dr          = 0  
+)
+
+allergy_mod_dr_0<-run_model(
+  parameters = par_allerg_dr_0,
+  ED_transfer = strategy_ED,
+  watch_wait = strategy_watch,
+  init = time0,
+  cycles = 20*365,
+  cost = cost_total,
+  effect = utility_total
+)
+
+
+
+par_allerg_dr_3<- modify(
+  par_allerg,
+  p_ww_faf    = (10* rescale_prob(p_faf, from = 365)/rescale_prob(p_severe, from = 365) -(1-p_EAI+p_biphas)* p_sh_ED*p_sh_faf)/(p_EAI-p_biphas),                                  #transition from watch and wait to food allergy fatality 
+  dr          = rescale_prob( p=0.03, from = 365)  
+)
+
+allergy_mod_dr_3<-run_model(
+  parameters = par_allerg_dr_3,
+  ED_transfer = strategy_ED,
+  watch_wait = strategy_watch,
+  init = time0,
+  cycles = 20*365,
+  cost = cost_total,
+  effect = utility_total
+)
+
+
 
 ## Build output table
 
@@ -528,14 +553,16 @@ value_100<-get_values(allergy_mod_100)
 value_500<-get_values(allergy_mod_500)
 value_1000<-get_values(allergy_mod_1000)
 value_10_societal<-get_values(allergy_mod_10_societal)
+value_dr_0<-get_values(allergy_mod_dr_0)
+value_dr_3<-get_values(allergy_mod_dr_3)
 
 counts_10<-get_counts(allergy_mod_10)
 counts_100<-get_counts(allergy_mod_100)
 counts_500<-get_counts(allergy_mod_500)
 counts_1000<-get_counts(allergy_mod_1000)
 counts_10_societal<-get_counts(allergy_mod_10_societal)
-
-counts_10 %>% filter(state_names == "state_faf" & model_time == 7300) %>% mutate(death_diff = count - lag(count))
+counts_dr_0<-get_counts(allergy_mod_dr_0)
+counts_dr_3<-get_counts(allergy_mod_dr_3)
 
 
 
@@ -544,13 +571,13 @@ counts_10 %>% filter(state_names == "state_faf" & model_time == 7300) %>% mutate
 #function to build table
 valuetable<-function(value,counts, senario_name){ a <-value %>%
   group_by(.strategy_names, value_names) %>% 
-    summarize(sum=sum(value/10000)) %>% 
-    pivot_wider(names_from = value_names, values_from = sum) %>% 
-    ungroup() %>%
-     mutate(cost_diff = cost_total- lag(cost_total)) %>%
-    mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
-    mutate(cost_per_QALY_saved= cost_diff/Qaly_diff) %>%
-    mutate(scenario =senario_name)
+  summarize(.groups = "keep", sum=sum(value/10000)) %>% 
+  pivot_wider(names_from = value_names, values_from = sum) %>% 
+  ungroup() %>%
+  mutate(cost_diff = cost_total- lag(cost_total)) %>%
+  mutate(Qaly_diff = utility_total- lag(utility_total)) %>%
+  mutate(cost_per_QALY_saved= cost_diff/Qaly_diff) %>%
+  mutate(scenario =senario_name)
 
 b <-counts %>% filter(state_names == "state_faf" & model_time == 7300) %>%
   mutate(death_diff = (count - lag(count))/10000)
@@ -559,18 +586,26 @@ merge(a,b, by = ".strategy_names" ) %>%
   mutate(cost_per_life_saved = abs(cost_diff/death_diff)) %>%
   select(scenario, .strategy_names, cost_total,utility_total,cost_diff,Qaly_diff,cost_per_QALY_saved, cost_per_life_saved,death_diff ) 
 }
-  
-  
+
+
+
 value_table_10<-valuetable(value_10,counts_10, "X10_mortality_in_ww")
 value_table_100<-valuetable(value_100,counts_100,"X100_mortality_in_ww")
 value_table_500<-valuetable(value_500,counts_500,"X500_mortality_in_ww")
 value_table_1000<-valuetable(value_1000, counts_1000,"X1000_mortality_in_ww")
 value_table_10_societal<-valuetable(value_10_societal,counts_10_societal,"X10_mortality_in_ww_societal")
+value_table_dr_0<-valuetable(value_dr_0,counts_dr_0, "discount 0%")
+value_table_dr_3<-valuetable(value_dr_3,counts_dr_0, "discount 3%")
 
+#INMB calculation
 
+INMB<-value_table_10 %>% 
+  mutate(INMB_result = Qaly_diff* 100000-cost_diff )
+
+print(INMB)
 
 #Build the final table to compare the cost_per_lifesaved with different mortality
-final_Table<-bind_rows(value_table_10,value_table_100,value_table_500,value_table_1000)  
+final_Table<-bind_rows(value_table_10,value_table_100,value_table_500,value_table_1000,value_table_dr_0,value_table_dr_3)  
 final_Table<-final_Table %>% mutate_if(is.numeric, as.character) 
 final_Table <-replace(final_Table, is.na(final_Table),"reference") 
 
@@ -605,6 +640,8 @@ final_Table_societal<-final_Table_societal %>% rename(
 print(as.data.frame(final_Table))
 print(as.data.frame (final_Table_societal))
 
+
+
 ## DSA Analysis 
 
 # sensitivity analysis parameter 
@@ -613,17 +650,16 @@ allergy_sa<-define_dsa(
   p_severe,               0.087 *0.8,            0.087 *1.2 ,
   p_sh_faf,               0.0045*0.8,            0.0045*1.2,
   p_sh_ED,                0.001684833*0.8,       0.001684833*1.2,
-  p_ww_faf,              8.69259e-05 *0.8,       8.69259e-05 *1.2,
   treatment_cost_ED,      0.8,                   95,
   treatment_cost_ww,      95*0.8,                95*1.2,
   treatment_cost_ww_ED,   0.8*0.8,               0.8*1.2,
-  remission_cost_all,     513/365*0.8,           513/365*1.2,
-  medical_cost_ns,        1254/365 *0.8,         1254/365*1.2,
+  remission_cost_all,     569/365*0.8,           569/365*1.2,
+  medical_cost_ns,        1388/365 *0.8,         1388/365*1.2,
   ambulance_cost_ED_ED,   848*0.8,               848*1.2,
   medical_cost_ED_ED,     331*0.8,               331*1.2,
   utility_far,            0.93/365*0.8,          1/365, #utility max =1 
   utility_fa,             0.92/365*0.8,          1/365 ,
-  utility_sr,             0.83*0.8/365,          0.83*1.2/365,
+  utility_sr,             0.812/365,             0.848/365,
   medical_cost_hospital,  1866*0.8,             1866*1.2
   
 )
@@ -636,7 +672,14 @@ allergy_dsa<-run_dsa(
   dsa = allergy_sa
 )
 
-cost_per_year_life_saved_ref<-value_table_10$cost_per_QALY_saved[value_table_10$.strategy_names == "watch_wait"]
+dsa_icer<-allergy_dsa$dsa %>% select(
+  .strategy_names, .par_names, .par_value, .cost, .effect,.n_indiv ) %>% group_by(.par_names) %>%
+  reframe( cost_diff =(.cost[.strategy_names == "watch_wait"] - .cost[.strategy_names == "ED_transfer"])/.n_indiv,
+             effect_diff = (.effect[.strategy_names == "watch_wait"] -.effect[.strategy_names == "ED_transfer"])/.n_indiv) %>% 
+  mutate(cost_per_Qaly_gained = cost_diff/effect_diff)
+
+
+cost_per_year_QALY_saved_ref<-value_table_10$cost_per_QALY_saved[value_table_10$.strategy_names == "watch_wait"]
 
 #Build tornado plot for SA result
 tornado_plot <- function(df, refer_value){
@@ -646,21 +689,21 @@ tornado_plot <- function(df, refer_value){
     mutate(
       Boundary = rep(c("Lower_Bound","Upper_Bound"), length.out = nrow(df))) 
   df<-df %>%  group_by(.par_names, Boundary) %>%
-    summarise( cost_diff =.cost[.strategy_names == "ED_transfer"] - .cost[.strategy_names == "watch_wait"],
-               effect_diff = .effect[.strategy_names == "ED_transfer"] -.effect[.strategy_names == "watch_wait"]) %>%
-    mutate(cost_per_Qaly_gained = cost_diff/effect_diff) %>% ungroup()
+    reframe( cost_diff =.cost[.strategy_names == "watch_wait"] - .cost[.strategy_names == "ED_transfer"],
+               effect_diff = .effect[.strategy_names == "watch_wait"] -.effect[.strategy_names == "ED_transfer"]) %>%
+    mutate(cost_per_Qaly_gained = cost_diff/effect_diff) 
   df<-df%>% select(.par_names, Boundary,cost_per_Qaly_gained) %>%
     pivot_wider(names_from = Boundary,values_from = cost_per_Qaly_gained) 
 
   df$UL_Difference <- abs(df$Upper_Bound - df$Lower_Bound)
   base.value <- refer_value
   
-  dsa_names<-c("ambulance cost(+/-20%)", "medical cost in ED(+/-20%)","cost for hospitalization(+/-20%)","Daily medical cost in non severe reaction (+/-20%)", 
-    "Annual remission probability  (+/-20%)","Probability of transition to severe allergy reaction (+/-20%)", "Probability of hospitalization in ED scenario (+/-20%)",
-    "Food allergy fatality among hospitalized patient (+/-20%)","Food allergy fatality among patients in watch and wait  (+/-20%)","Daily cost for food allergy remisison (+/-20%)",
-    "Epinephrine cost in ED for ED transfer scenario (0.8, 95)", "Epinephrine cost in watch_wate state(+/-20%)", 
-    "Epinephrine cost in ED for watch wait scenario (+/-20%)", 
-               "QALY for food allergy(+/-20%)", "QALY for food allergy remission(+/-20%)", "QALY for severe allergy reaction(+/-20%)"
+  dsa_names<-c("Ambulance cost (+/-20%)", "Medical cost - ED (+/-20%)","Medical cost - Hospitalization (+/-20%)","Daily medical cost - Non-severe reaction (+/-20%)", 
+    "Annual probability - Remission (+/-20%)","Annual probability - Severe allergy reaction (+/-20%)", "Probability - Hospitalization after severe reaction (+/-20%)",
+    "Fatality in hospitalized patient (+/-20%)","Daily cost - Food allergy remission (+/-20%)",
+    "Epinephrine cost in ED state - Immediate ED transfer scenario ($0.8, $95)", "Epinephrine cost in watchful waiting state (+/-20%)", 
+    "Epinephrine cost in ED state - Watchful waiting scenario (+/-20%)", 
+               "Utility - Non-severe food allergy (+/-20%)", "Utility - Food allergy remission (+/-20%)", "Disutility - Severe allergy reaction (+/-20%)"
   )
   
  
@@ -696,16 +739,18 @@ tornado_plot <- function(df, refer_value){
     geom_hline(yintercept = base.value) +
     scale_x_continuous(breaks = c(1:length(order.parameters)), 
                        labels = order.parameters) +
-    coord_flip() + labs(y="incremental cost per life-year saved")
+    coord_flip() + labs(y="Incremental cost per QALY saved")
   
   
   list(df,p)
 }
 
 #tornado_plot for the model
-tornado_plot(allergy_dsa$dsa, cost_per_year_life_saved_ref)
+DSA_tornado<-tornado_plot(allergy_dsa$dsa, cost_per_year_QALY_saved_ref) 
 
+print(DSA_tornado)
 
+ggsave("dsa_tornado.png")
 
 
 psa_base<-define_psa(
@@ -716,14 +761,14 @@ psa_base<-define_psa(
   p_faf ~ beta(99.9999,144927335.2320),
   p_sh_faf ~ beta(45.8194, 10136.2621),
   p_EAI_ED ~ beta(7.6118, 6.4841),
-  medical_cost_ns_original ~ gamma(1393,13.93),
+  medical_cost_ns_original ~ gamma(1393,139.3),
   medical_cost_original~ gamma(304, 30.4),
   ambulance_cost_ED_ED ~ gamma(848,84.8),
   waiting_time_ED ~ gamma(3.6,6.8664),
   medical_h ~ gamma(3670,367),
-  length_stay ~ lognormal (mean = 2.1 ,sd =2.7),
+  length_stay ~ lognormal(mean = 2.1,sd= 2.7,meanlog = 0.742,sdlog = 0.993),
   out_of_pocket_original~ gamma(89, 8.9),
-  no_visit ~ gamma(0.3,0.9),
+  no_visit ~gamma(0.3,0.9),
   indirect_cost_allergy_original ~gamma(4173, 417.3),
   out_of_pocket_allergy_original ~ gamma(2440, 244),
   utility_far_original ~ beta(8.7708,0.6602),
@@ -731,15 +776,138 @@ psa_base<-define_psa(
   utility_sa ~ beta(1.6689, 0.1651)
 )
 
-psa_result_1000<-run_psa(allergy_mod_10,psa_base, N= 1000)
 
-print(psa_result_1000)
+psa_result_base<-run_psa(allergy_mod_10,psa_base, N= 1000)
+
+save(psa_result_base, file = "PSA_result_base")
+
+psa_result_societal<-run_psa(allergy_mod_10_societal,psa_base, N =1000)
+
+save(psa_result_societal, file = "PSA_result_societal")
+
+psa_result_100<-run_psa(allergy_mod_100 ,psa_base, N= 1000)
+
+save(psa_result_100, file = "PSA_result_100")
+
+psa_result_500<-run_psa(allergy_mod_500 ,psa_base, N= 1000)
+
+save(psa_result_500, file = "PSA_result_500")
+
+psa_result_1000<-run_psa(allergy_mod_1000 ,psa_base, N= 1000)
+
+save(psa_result_1000, file = "PSA_result_1000")
 
 
 
-export_savi(psa_result_1000, folder = "/Users/yiweiyin/My Drive (yinyiweivv@gmail.com)/UBC/thesis/Allergy cost effective/Allergy_EAI_CEA")
+psa_result_dr_0<-run_psa(allergy_mod_dr_0 ,psa_base, N= 1000)
+
+save(psa_result_dr_0 , file = "PSA_result_dr_0")
+
+psa_result_dr_3<-run_psa(allergy_mod_dr_3 ,psa_base, N= 1000)
+
+save(psa_result_dr_3 , file = "PSA_result_dr_3")
 
 
+
+
+
+
+Psa_summary<-function(dr,scenario_name) {
+  a <-dr$psa
+  
+  b <-a%>% group_by(.index) %>% 
+    mutate(cost_diff = .cost- lag(.cost)) %>%
+    mutate(Qaly_diff = .effect- lag(.effect))%>%
+    mutate(INMB =Qaly_diff/10000 *100000-cost_diff/10000 )
+  
+  mean_cost<-round(mean(b$cost_diff,na.rm = TRUE)/10000,4)
+  
+  mean_utility<-signif(mean(b$Qaly_diff,na.rm = TRUE)/10000,4)
+  
+  INMB_result<-round(mean(b$INMB,na.rm = TRUE),4)
+  
+  cost_ED<-round(mean(a$.cost[a$.strategy_names=="ED_transfer"])/10000,4)
+  
+  cost_watch<-round(mean(a$.cost[a$.strategy_names=="watch_wait"])/10000,4)
+  
+  utility_ED<-round(mean(a$.effect[a$.strategy_names=="ED_transfer"])/10000,4)
+  
+ utility_watch<-round(mean(a$.effect[a$.strategy_names=="watch_wait"])/10000,4)
+  
+  c<-data.frame(
+    Scenrio = scenario_name,
+    watch_cost = cost_watch,
+    ED_cost = cost_ED,
+    QALY_ED = utility_ED,
+    QAlY_watch = utility_watch,
+    Increment_cost = mean_cost,
+    Increment_utility= mean_utility,
+    ICER= mean_cost/mean_utility,
+    INMB = INMB_result)
+    
+    print(c)
+
+}
+
+PSA_result_summary<-bind_rows(Psa_summary(psa_result_base,"psa_base"), Psa_summary(psa_result_100,"psa_100"), Psa_summary(psa_result_500, "psa_500"),
+    Psa_summary(psa_result_1000,"psa_1000"), Psa_summary(psa_result_dr_0, "discount 0"), Psa_summary(psa_result_dr_3, "discount 3%"),
+    Psa_summary(psa_result_societal,"psa_societal"))
+                                                                                                
+
+psa_analysis<-psa_result_base$psa
+
+reuslt <-psa_analysis %>% group_by(.index) %>% 
+  mutate(cost_diff = .cost- lag(.cost)) %>%
+  mutate(Qaly_diff = .effect- lag(.effect)) 
+  
+
+mean(reuslt$cost_diff,na.rm = TRUE)/1000
+
+mean_utility<-mean(reuslt$Qaly_diff,na.rm = TRUE)/10000
+
+
+
+
+plot_ceac<-plot(psa_result_base , type = "ac", max_wtp = 150000, n=1000) + xlim (-1, 150001)+
+  labs(y="Proportion", x="Willingness-to-pay")+
+  theme_bw() + theme(panel.border = element_blank(),
+                     # panel.grid.major = element_blank(),
+                     # panel.grid.minor = element_blank(), 
+                     axis.line = element_line(colour = "black") 
+  )
+
+
+CEA_plot <- function(data, 
+                     x, y, 
+                     title=NULL,
+                     xlab=NULL, ylab=NULL){
+  p <- ggplot(data = data,
+              aes(x,y))+
+    geom_point()+
+    stat_ellipse()+
+    labs(x=xlab, y=ylab, title=title)+
+    geom_hline(yintercept = 0)+
+    geom_vline(xintercept = 0)+
+    theme_bw() + theme(panel.border = element_blank(),
+                       # panel.grid.major = element_blank(),
+                       # panel.grid.minor = element_blank(), 
+                       axis.line = element_line(colour = "black") 
+    )
+  
+  return(p)
+}
+
+
+cea_analysis<-psa_result_base$psa %>% 
+  arrange(.strategy_names, .index) %>% 
+  group_by(.index) %>%
+mutate(cost_diff = (.cost-lag(.cost))/10000, utility_diff = (.effect-lag(.effect))/10000)
+
+plot_cea_base<-CEA_plot(data = cea_analysis, x=cea_analysis$utility_diff,y=cea_analysis$cost_diff,xlab="Incremental QALY", ylab = "Incremental Cost" )
+
+ggsave("Psa_base.png")
+
+ggsave("psa_ac.png")
 
 
 
