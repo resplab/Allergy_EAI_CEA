@@ -798,9 +798,7 @@ print(DSA_tornado)
 
 ## PSA analysis
 
-```{r}
-
-psa_base<-define_psa(
+```{psa_base<-define_psa(}
   p_severe ~ beta(66.3345,696.1314),
   p_ns_ar_original ~ beta(47.4951,771.3863),
   p_biphas ~ beta(183.5019,3805.6703),
@@ -822,6 +820,8 @@ psa_base<-define_psa(
   utility_fa_original ~ beta(7.0800, 0.6157),
   utility_sa ~ beta(1.6689, 0.1651)
 )
+
+
 
 
 psa_result_base<-run_psa(allergy_mod_10,psa_base, N= 1000)
@@ -884,32 +884,6 @@ cea_analysis<-psa_result_base$psa %>%
   group_by(.index) %>%
 mutate(cost_diff = (.cost-lag(.cost))/10000, utility_diff = (.effect-lag(.effect))/10000)
 
-CEA_plot <- function(data, 
-                     x, y, 
-                     title=NULL,
-                     xlab=NULL, ylab=NULL){
-  p <- ggplot(data = data,
-              aes(x,y))+
-    geom_point()+
-    stat_ellipse()+
-    labs(x=xlab, y=ylab, title=title)+
-    geom_hline(yintercept = 0)+
-    geom_vline(xintercept = 0)+
-    theme_bw() + theme(panel.border = element_blank(),
-                       # panel.grid.major = element_blank(),
-                       # panel.grid.minor = element_blank(), 
-                       axis.line = element_line(colour = "black") 
-    )
-  
-  return(p)
-}
-
-psa_analysis<-psa_result_1000$psa
-
-cea_analysis<-psa_analysis%>% 
-  arrange(.strategy_names, .index) %>%
-  group_by(.index) %>%
-mutate(cost_diff = (.cost-lag(.cost))/10000, utility_diff = (.effect-lag(.effect))/10000)
 
 plot_cea_base<-CEA_plot(data = cea_analysis, x=cea_analysis$utility_diff,y=cea_analysis$cost_diff,xlab="Incremental QALY", ylab = "Incremental Cost" )
 
