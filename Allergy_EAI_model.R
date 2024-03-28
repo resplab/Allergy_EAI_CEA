@@ -276,7 +276,7 @@ allergy_mod_10<-run_model(
   method = "beginning"
 )
 
-summary
+
 
 
 ## Model X 100 mortality
@@ -652,7 +652,7 @@ allergy_sa<-define_dsa(
   p_sh_ED,                0.001684833*0.8,       0.001684833*1.2,
   treatment_cost_ED,      0.8,                   95,
   treatment_cost_ww,      95*0.8,                95*1.2,
-  treatment_cost_ww_ED,   0.8*0.8,               0.8*1.2,
+  treatment_cost_ww_ED,   0.8,                   95,
   remission_cost_all,     569/365*0.8,           569/365*1.2,
   medical_cost_ns,        1388/365 *0.8,         1388/365*1.2,
   ambulance_cost_ED_ED,   848*0.8,               848*1.2,
@@ -698,12 +698,12 @@ tornado_plot <- function(df, refer_value){
   df$UL_Difference <- abs(df$Upper_Bound - df$Lower_Bound)
   base.value <- refer_value
   
-  dsa_names<-c("Ambulance cost (+/-20%)", "Medical cost - ED (+/-20%)","Medical cost - Hospitalization (+/-20%)","Daily medical cost - Non-severe reaction (+/-20%)", 
-    "Annual probability - Remission (+/-20%)","Annual probability - Severe allergy reaction (+/-20%)", "Probability - Hospitalization after severe reaction (+/-20%)",
-    "Fatality in hospitalized patient (+/-20%)","Daily cost - Food allergy remission (+/-20%)",
-    "Epinephrine cost in ED state - Immediate ED transfer scenario ($0.8, $95)", "Epinephrine cost in watchful waiting state (+/-20%)", 
-    "Epinephrine cost in ED state - Watchful waiting scenario (+/-20%)", 
-               "Utility - Non-severe food allergy (+/-20%)", "Utility - Food allergy remission (+/-20%)", "Disutility - Severe allergy reaction (+/-20%)"
+  dsa_names<-c("Ambulance cost (+/-20%)", "Medical cost - ED (+/-20%)","Medical cost - Hospitalization (+/-20%)","Medical cost - Food allergy (+/-20%)", 
+    "Annual probability - Food allergy remission (+/-20%)","Annual probability - Severe allergy reaction (+/-20%)", "Probability - Hospitalization post-ED visit (+/-20%)",
+    "Food allergy fatality in hospitalized patients (+/-20%)","Medical cost - Food allergy remission (+/-20%)",
+    "Epinephrine cost in ED state - Immediate ED transfer strategy ($0.8, $95)", "Epinephrine auto injector cost in watchful waiting state (+/-20%)", 
+    "Epinephrine cost in ED state - Watchful waiting strategy ($0.8, $95)", 
+               "Utility - Food allergy (+/-20%)", "Utility - Food allergy remission (+/-20%)", "Disutility - Severe allergy reaction (+/-20%)"
   )
   
  
@@ -735,7 +735,7 @@ tornado_plot <- function(df, refer_value){
               aes(ymax=ymax, ymin=ymin, xmax=xmax, xmin=xmin, fill=type)) +
     theme_bw() +
     theme(axis.title.y=element_blank(), legend.position = 'bottom',
-          legend.title = element_blank()) + 
+          legend.title = element_blank(),text=element_text(size=15)) + 
     geom_hline(yintercept = base.value) +
     scale_x_continuous(breaks = c(1:length(order.parameters)), 
                        labels = order.parameters) +
@@ -752,7 +752,7 @@ print(DSA_tornado)
 
 ggsave("dsa_tornado.png")
 
-
+#PSA analysis 
 psa_base<-define_psa(
   p_severe ~ beta(66.3345,696.1314),
   p_ns_ar_original ~ beta(47.4951,771.3863),
@@ -808,9 +808,7 @@ psa_result_dr_3<-run_psa(allergy_mod_dr_3 ,psa_base, N= 1000)
 save(psa_result_dr_3 , file = "PSA_result_dr_3")
 
 
-
-
-
+#PSA summary 
 
 Psa_summary<-function(dr,scenario_name) {
   a <-dr$psa
@@ -818,7 +816,7 @@ Psa_summary<-function(dr,scenario_name) {
   b <-a%>% group_by(.index) %>% 
     mutate(cost_diff = .cost- lag(.cost)) %>%
     mutate(Qaly_diff = .effect- lag(.effect))%>%
-    mutate(INMB =Qaly_diff/10000 *100000-cost_diff/10000 )
+    mutate(INMB =(Qaly_diff/10000) *50000-cost_diff/10000 )
   
   mean_cost<-round(mean(b$cost_diff,na.rm = TRUE)/10000,4)
   
@@ -854,20 +852,7 @@ PSA_result_summary<-bind_rows(Psa_summary(psa_result_base,"psa_base"), Psa_summa
     Psa_summary(psa_result_societal,"psa_societal"))
                                                                                                 
 
-psa_analysis<-psa_result_base$psa
-
-reuslt <-psa_analysis %>% group_by(.index) %>% 
-  mutate(cost_diff = .cost- lag(.cost)) %>%
-  mutate(Qaly_diff = .effect- lag(.effect)) 
-  
-
-mean(reuslt$cost_diff,na.rm = TRUE)/1000
-
-mean_utility<-mean(reuslt$Qaly_diff,na.rm = TRUE)/10000
-
-
-
-
+#ceac plot 
 plot_ceac<-plot(psa_result_base , type = "ac", max_wtp = 150000, n=1000) + xlim (-1, 150001)+
   labs(y="Proportion", x="Willingness-to-pay")+
   theme_bw() + theme(panel.border = element_blank(),
@@ -876,11 +861,11 @@ plot_ceac<-plot(psa_result_base , type = "ac", max_wtp = 150000, n=1000) + xlim 
                      axis.line = element_line(colour = "black") 
   )
 
-
+#CEA plot 
 CEA_plot <- function(data, 
                      x, y, 
                      title=NULL,
-                     xlab=NULL, ylab=NULL){
+                     xlab=NULL, ylab=NULL,wtp){
   p <- ggplot(data = data,
               aes(x,y))+
     geom_point()+
@@ -888,7 +873,9 @@ CEA_plot <- function(data,
     labs(x=xlab, y=ylab, title=title)+
     geom_hline(yintercept = 0)+
     geom_vline(xintercept = 0)+
-    theme_bw() + theme(panel.border = element_blank(),
+    geom_abline(intercept = 0, slope = 50000,linetype = 2)+
+    annotate("text", x = -0.0006, y = -250, label = "WTP = $50,000", size = 8, color = "black") +
+    theme_bw(base_size = 18) + theme(panel.border = element_blank(),
                        # panel.grid.major = element_blank(),
                        # panel.grid.minor = element_blank(), 
                        axis.line = element_line(colour = "black") 
@@ -905,9 +892,7 @@ mutate(cost_diff = (.cost-lag(.cost))/10000, utility_diff = (.effect-lag(.effect
 
 plot_cea_base<-CEA_plot(data = cea_analysis, x=cea_analysis$utility_diff,y=cea_analysis$cost_diff,xlab="Incremental QALY", ylab = "Incremental Cost" )
 
-ggsave("Psa_base.png")
 
-ggsave("psa_ac.png")
 
 
 

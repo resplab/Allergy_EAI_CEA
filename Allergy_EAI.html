@@ -1190,7 +1190,7 @@ ED_transfer   1011.657 0.0006003287 1685172 watch_wait</code></pre>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  p_sh_ED,                <span class="fl">0.001684833</span><span class="sc">*</span><span class="fl">0.8</span>,       <span class="fl">0.001684833</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ED,      <span class="fl">0.8</span>,                   <span class="dv">95</span>,</span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ww,      <span class="dv">95</span><span class="sc">*</span><span class="fl">0.8</span>,                <span class="dv">95</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ww_ED,   <span class="fl">0.8</span><span class="sc">*</span><span class="fl">0.8</span>,               <span class="fl">0.8</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  treatment_cost_ww_ED,   <span class="fl">0.8</span>,                   <span class="dv">95</span>,</span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  remission_cost_all,     <span class="dv">569</span><span class="sc">/</span><span class="dv">365</span><span class="sc">*</span><span class="fl">0.8</span>,           <span class="dv">569</span><span class="sc">/</span><span class="dv">365</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
 <span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  medical_cost_ns,        <span class="dv">1388</span><span class="sc">/</span><span class="dv">365</span> <span class="sc">*</span><span class="fl">0.8</span>,         <span class="dv">1388</span><span class="sc">/</span><span class="dv">365</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
 <span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  ambulance_cost_ED_ED,   <span class="dv">848</span><span class="sc">*</span><span class="fl">0.8</span>,               <span class="dv">848</span><span class="sc">*</span><span class="fl">1.2</span>,</span>
@@ -1246,12 +1246,12 @@ ED_transfer   1011.657 0.0006003287 1685172 watch_wait</code></pre>
 <span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>UL_Difference <span class="ot">&lt;-</span> <span class="fu">abs</span>(df<span class="sc">$</span>Upper_Bound <span class="sc">-</span> df<span class="sc">$</span>Lower_Bound)</span>
 <span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  base.value <span class="ot">&lt;-</span> refer_value</span>
 <span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  dsa_names<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Ambulance cost (+/-20%)"</span>, <span class="st">"Medical cost - ED (+/-20%)"</span>,<span class="st">"Medical cost - Hospitalization (+/-20%)"</span>,<span class="st">"Daily medical cost - Non-severe reaction (+/-20%)"</span>, </span>
-<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Annual probability - Remission (+/-20%)"</span>,<span class="st">"Annual probability - Severe allergy reaction (+/-20%)"</span>, <span class="st">"Probability - Hospitalization after severe reaction (+/-20%)"</span>,</span>
-<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fatality in hospitalized patient (+/-20%)"</span>,<span class="st">"Daily cost - Food allergy remission (+/-20%)"</span>,</span>
-<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Epinephrine cost in ED state - Immediate ED transfer scenario ($0.8, $95)"</span>, <span class="st">"Epinephrine cost in watchful waiting state (+/-20%)"</span>, </span>
-<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Epinephrine cost in ED state - Watchful waiting scenario (+/-20%)"</span>, </span>
-<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Utility - Non-severe food allergy (+/-20%)"</span>, <span class="st">"Utility - Food allergy remission (+/-20%)"</span>, <span class="st">"Disutility - Severe allergy reaction (+/-20%)"</span></span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  dsa_names<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Ambulance cost (+/-20%)"</span>, <span class="st">"Medical cost - ED (+/-20%)"</span>,<span class="st">"Medical cost - Hospitalization (+/-20%)"</span>,<span class="st">"Medical cost - Food allergy (+/-20%)"</span>, </span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Annual probability - Food allergy remission (+/-20%)"</span>,<span class="st">"Annual probability - Severe allergy reaction (+/-20%)"</span>, <span class="st">"Probability - Hospitalization post-ED visit (+/-20%)"</span>,</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Food allergy fatality in hospitalized patients (+/-20%)"</span>,<span class="st">"Medical cost - Food allergy remission (+/-20%)"</span>,</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Epinephrine cost in ED state - Immediate ED transfer strategy ($0.8, $95)"</span>, <span class="st">"Epinephrine auto injector cost in watchful waiting state (+/-20%)"</span>, </span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Epinephrine cost in ED state - Watchful waiting strategy ($0.8, $95)"</span>, </span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Utility - Food allergy (+/-20%)"</span>, <span class="st">"Utility - Food allergy remission (+/-20%)"</span>, <span class="st">"Disutility - Severe allergy reaction (+/-20%)"</span></span>
 <span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a> </span>
@@ -1283,7 +1283,7 @@ ED_transfer   1011.657 0.0006003287 1685172 watch_wait</code></pre>
 <span id="cb35-61"><a href="#cb35-61" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">ymax=</span>ymax, <span class="at">ymin=</span>ymin, <span class="at">xmax=</span>xmax, <span class="at">xmin=</span>xmin, <span class="at">fill=</span>type)) <span class="sc">+</span></span>
 <span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb35-63"><a href="#cb35-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.title.y=</span><span class="fu">element_blank</span>(), <span class="at">legend.position =</span> <span class="st">'bottom'</span>,</span>
-<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> </span>
+<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),<span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>)) <span class="sc">+</span> </span>
 <span id="cb35-65"><a href="#cb35-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> base.value) <span class="sc">+</span></span>
 <span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(order.parameters)), </span>
 <span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> order.parameters) <span class="sc">+</span></span>
@@ -1305,16 +1305,16 @@ ED_transfer   1011.657 0.0006003287 1685172 watch_wait</code></pre>
  1 ambulance_cost_ED_ED     1355105.    1824604.      469499.  Ambulance cost (…
  2 medical_cost_ED_ED       1498244.    1681465.      183221.  Medical cost - E…
  3 medical_cost_hospital    1588984.    1590725.        1740.  Medical cost - H…
- 4 medical_cost_ns          1589581.    1590128.         547.  Daily medical co…
+ 4 medical_cost_ns          1589581.    1590128.         547.  Medical cost - F…
  5 p_ns_ar                  1603946.    1575682.       28264.  Annual probabili…
  6 p_severe                 1261317.    1924701.      663384.  Annual probabili…
  7 p_sh_ED                  1554283.    1627052.       72768.  Probability - Ho…
- 8 p_sh_faf                 1591176.    1588973.        2203.  Fatality in hosp…
- 9 remission_cost_all       1589843.    1589865.          21.8 Daily cost - Foo…
+ 8 p_sh_faf                 1591176.    1588973.        2203.  Food allergy fat…
+ 9 remission_cost_all       1589843.    1589865.          21.8 Medical cost - F…
 10 treatment_cost_ED        1507290.    1658900.      151610.  Epinephrine cost…
-11 treatment_cost_ww        1616151.    1563558.       52594.  Epinephrine cost…
-12 treatment_cost_ww_ED     1589890.    1589818.          72.1 Epinephrine cost…
-13 utility_fa               1944308.    1473094.      471214.  Utility - Non-se…
+11 treatment_cost_ww        1616151.    1563558.       52594.  Epinephrine auto…
+12 treatment_cost_ww_ED     1589854.    1568630.       21224.  Epinephrine cost…
+13 utility_fa               1944308.    1473094.      471214.  Utility - Food a…
 14 utility_far              1618693.    1579265.       39428.  Utility - Food a…
 15 utility_sr               1590044.    1589665.         380.  Disutility - Sev…
 
@@ -1326,99 +1326,67 @@ ED_transfer   1011.657 0.0006003287 1685172 watch_wait</code></pre>
 </div>
 <section id="psa-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="psa-analysis">PSA analysis</h2>
-<pre class="{psa_base<-define_psa(}"><code>  p_severe ~ beta(66.3345,696.1314),
-  p_ns_ar_original ~ beta(47.4951,771.3863),
-  p_biphas ~ beta(183.5019,3805.6703),
-  p_EAI ~ beta(8.4940, 0.8813),
-  p_faf ~ beta(99.9999,144927335.2320),
-  p_sh_faf ~ beta(45.8194, 10136.2621),
-  p_EAI_ED ~ beta(7.6118, 6.4841),
-  medical_cost_ns_original ~ gamma(1393,139.3),
-  medical_cost_original~ gamma(304, 30.4),
-  ambulance_cost_ED_ED ~ gamma(848,84.8),
-  waiting_time_ED ~ gamma(3.6,6.8664),
-  medical_h ~ gamma(3670,367),
-  length_stay ~ lognormal(mean = 2.1,sd= 2.7,meanlog = 0.742,sdlog = 0.993),
-  out_of_pocket_original~ gamma(89, 8.9),
-  no_visit ~gamma(0.3,0.9),
-  indirect_cost_allergy_original ~gamma(4173, 417.3),
-  out_of_pocket_allergy_original ~ gamma(2440, 244),
-  utility_far_original ~ beta(8.7708,0.6602),
-  utility_fa_original ~ beta(7.0800, 0.6157),
-  utility_sa ~ beta(1.6689, 0.1651)
-)
+<p>```{r} psa_base&lt;-define_psa( p_severe ~ beta(66.3345,696.1314), p_ns_ar_original ~ beta(47.4951,771.3863), p_biphas ~ beta(183.5019,3805.6703), p_EAI ~ beta(8.4940, 0.8813), p_faf ~ beta(99.9999,144927335.2320), p_sh_faf ~ beta(45.8194, 10136.2621), p_EAI_ED ~ beta(7.6118, 6.4841), medical_cost_ns_original ~ gamma(1393,139.3), medical_cost_original~ gamma(304, 30.4), ambulance_cost_ED_ED ~ gamma(848,84.8), waiting_time_ED ~ gamma(3.6,6.8664), medical_h ~ gamma(3670,367), length_stay ~ lognormal(mean = 2.1,sd= 2.7,meanlog = 0.742,sdlog = 0.993), out_of_pocket_original~ gamma(89, 8.9), no_visit ~gamma(0.3,0.9), indirect_cost_allergy_original ~gamma(4173, 417.3), out_of_pocket_allergy_original ~ gamma(2440, 244), utility_far_original ~ beta(8.7708,0.6602), utility_fa_original ~ beta(7.0800, 0.6157), utility_sa ~ beta(1.6689, 0.1651) )</p>
+<p>psa_result_base&lt;-run_psa(allergy_mod_10,psa_base, N= 1000)</p>
+<p>psa_result_societal&lt;-run_psa(allergy_mod_10_societal,psa_base, N =1000)</p>
+<p>psa_result_100&lt;-run_psa(allergy_mod_100 ,psa_base, N= 1000)</p>
+<p>psa_result_500&lt;-run_psa(allergy_mod_500 ,psa_base, N= 1000)</p>
+<p>psa_result_1000&lt;-run_psa(allergy_mod_1000 ,psa_base, N= 1000)</p>
+<p>psa_result_dr_0&lt;-run_psa(allergy_mod_dr_0 ,psa_base, N= 1000)</p>
+<p>psa_result_dr_3&lt;-run_psa(allergy_mod_dr_3 ,psa_base, N= 1000)</p>
+<pre><code>
+## PSA graph-base model 
 
 
+::: {.cell}
 
+```{.r .cell-code}
+load("psa_result_base")
 
-psa_result_base&lt;-run_psa(allergy_mod_10,psa_base, N= 1000)
-
-psa_result_societal&lt;-run_psa(allergy_mod_10_societal,psa_base, N =1000)
-
-psa_result_100&lt;-run_psa(allergy_mod_100 ,psa_base, N= 1000)
-
-psa_result_500&lt;-run_psa(allergy_mod_500 ,psa_base, N= 1000)
-
-psa_result_1000&lt;-run_psa(allergy_mod_1000 ,psa_base, N= 1000)
-
-psa_result_dr_0&lt;-run_psa(allergy_mod_dr_0 ,psa_base, N= 1000)
-
-psa_result_dr_3&lt;-run_psa(allergy_mod_dr_3 ,psa_base, N= 1000)
-
-
-
-
-</code></pre>
-</section>
-<section id="psa-graph-base-model" class="level2">
-<h2 class="anchored" data-anchor-id="psa-graph-base-model">PSA graph-base model</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_base"</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>plot_ceac<span class="ot">&lt;-</span><span class="fu">plot</span>(psa_result_base , <span class="at">type =</span> <span class="st">"ac"</span>, <span class="at">max_wtp =</span> <span class="dv">150000</span>, <span class="at">n=</span><span class="dv">1000</span>) <span class="sc">+</span> <span class="fu">xlim</span> (<span class="sc">-</span><span class="dv">1</span>, <span class="dv">150001</span>)<span class="sc">+</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Proportion"</span>, <span class="at">x=</span><span class="st">"Willingness-to-pay"</span>)<span class="sc">+</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                     <span class="co"># panel.grid.major = element_blank(),</span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                     <span class="co"># panel.grid.minor = element_blank(), </span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) </span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+plot_ceac&lt;-plot(psa_result_base , type = "ac", max_wtp = 150000, n=1000) + xlim (-1, 150001)+
+  labs(y="Proportion", x="Willingness-to-pay")+
+  theme_bw() + theme(panel.border = element_blank(),
+                     # panel.grid.major = element_blank(),
+                     # panel.grid.minor = element_blank(), 
+                     axis.line = element_line(colour = "black") 
+  )</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for x is already present.
 Adding another scale for x, which will replace the existing scale.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_ceac)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_ceac)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Allergy_EAI_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>CEA_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                     x, y, </span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">title=</span><span class="cn">NULL</span>,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xlab=</span><span class="cn">NULL</span>, <span class="at">ylab=</span><span class="cn">NULL</span>){</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> data,</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(x,y))<span class="sc">+</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_ellipse</span>()<span class="sc">+</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span>xlab, <span class="at">y=</span>ylab, <span class="at">title=</span>title)<span class="sc">+</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>)<span class="sc">+</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)<span class="sc">+</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># panel.grid.major = element_blank(),</span></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># panel.grid.minor = element_blank(), </span></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) </span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>cea_analysis<span class="ot">&lt;-</span>psa_result_base<span class="sc">$</span>psa <span class="sc">%&gt;%</span> </span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(.strategy_names, .index) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(.index) <span class="sc">%&gt;%</span></span>
-<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">cost_diff =</span> (.cost<span class="sc">-</span><span class="fu">lag</span>(.cost))<span class="sc">/</span><span class="dv">10000</span>, <span class="at">utility_diff =</span> (.effect<span class="sc">-</span><span class="fu">lag</span>(.effect))<span class="sc">/</span><span class="dv">10000</span>)</span>
-<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>plot_cea_base<span class="ot">&lt;-</span><span class="fu">CEA_plot</span>(<span class="at">data =</span> cea_analysis, <span class="at">x=</span>cea_analysis<span class="sc">$</span>utility_diff,<span class="at">y=</span>cea_analysis<span class="sc">$</span>cost_diff,<span class="at">xlab=</span><span class="st">"Incremental QALY"</span>, <span class="at">ylab =</span> <span class="st">"Incremental Cost"</span> )</span>
-<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_cea_base)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>CEA_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                     x, y, </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">title=</span><span class="cn">NULL</span>,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xlab=</span><span class="cn">NULL</span>, <span class="at">ylab=</span><span class="cn">NULL</span>){</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> data,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(x,y))<span class="sc">+</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_ellipse</span>()<span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span>xlab, <span class="at">y=</span>ylab, <span class="at">title=</span>title)<span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>)<span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>)<span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># panel.grid.major = element_blank(),</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># panel.grid.minor = element_blank(), </span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) </span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>cea_analysis<span class="ot">&lt;-</span>psa_result_base<span class="sc">$</span>psa <span class="sc">%&gt;%</span> </span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(.strategy_names, .index) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(.index) <span class="sc">%&gt;%</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">cost_diff =</span> (.cost<span class="sc">-</span><span class="fu">lag</span>(.cost))<span class="sc">/</span><span class="dv">10000</span>, <span class="at">utility_diff =</span> (.effect<span class="sc">-</span><span class="fu">lag</span>(.effect))<span class="sc">/</span><span class="dv">10000</span>)</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>plot_cea_base<span class="ot">&lt;-</span><span class="fu">CEA_plot</span>(<span class="at">data =</span> cea_analysis, <span class="at">x=</span>cea_analysis<span class="sc">$</span>utility_diff,<span class="at">y=</span>cea_analysis<span class="sc">$</span>cost_diff,<span class="at">xlab=</span><span class="st">"Incremental QALY"</span>, <span class="at">ylab =</span> <span class="st">"Incremental Cost"</span> )</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_cea_base)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 1000 rows containing non-finite values (`stat_ellipse()`).</code></pre>
 </div>
@@ -1428,7 +1396,7 @@ Adding another scale for x, which will replace the existing scale.</code></pre>
 <div class="cell-output-display">
 <p><img src="Allergy_EAI_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
 </div>
-</div>
+<p>:::</p>
 </section>
 <section id="scenario-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="scenario-analysis">Scenario Analysis</h2>
@@ -1436,53 +1404,53 @@ Adding another scale for x, which will replace the existing scale.</code></pre>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section"></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Psa_summary<span class="ot">&lt;-</span><span class="cf">function</span>(dr,scenario_name) {</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span>dr<span class="sc">$</span>psa</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span>a<span class="sc">%&gt;%</span> <span class="fu">group_by</span>(.index) <span class="sc">%&gt;%</span> </span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">cost_diff =</span> .cost<span class="sc">-</span> <span class="fu">lag</span>(.cost)) <span class="sc">%&gt;%</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Qaly_diff =</span> .effect<span class="sc">-</span> <span class="fu">lag</span>(.effect))<span class="sc">%&gt;%</span></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">INMB =</span>Qaly_diff<span class="sc">/</span><span class="dv">10000</span> <span class="sc">*</span><span class="dv">100000</span><span class="sc">-</span>cost_diff<span class="sc">/</span><span class="dv">10000</span> )</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  mean_cost<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(b<span class="sc">$</span>cost_diff,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  mean_utility<span class="ot">&lt;-</span><span class="fu">signif</span>(<span class="fu">mean</span>(b<span class="sc">$</span>Qaly_diff,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  INMB_result<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(b<span class="sc">$</span>INMB,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>)</span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  cost_ED<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.cost[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"ED_transfer"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>  cost_watch<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.cost[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"watch_wait"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>  utility_ED<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.effect[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"ED_transfer"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a> utility_watch<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.effect[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"watch_wait"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>  c<span class="ot">&lt;-</span><span class="fu">data.frame</span>(</span>
-<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Scenrio =</span> scenario_name,</span>
-<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">watch_cost =</span> cost_watch,</span>
-<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">ED_cost =</span> cost_ED,</span>
-<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">QALY_ED =</span> utility_ED,</span>
-<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">QAlY_watch =</span> utility_watch,</span>
-<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">Increment_cost =</span> mean_cost,</span>
-<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">Increment_utility=</span> mean_utility,</span>
-<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">ICER=</span> mean_cost<span class="sc">/</span>mean_utility,</span>
-<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">INMB =</span> INMB_result)</span>
-<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(c)</span>
-<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_100"</span>)</span>
-<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_500"</span>)</span>
-<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_1000"</span>)</span>
-<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_dr_0"</span>)</span>
-<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_dr_3"</span>)</span>
-<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_societal"</span>)</span>
-<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a>PSA_result_summary<span class="ot">&lt;-</span><span class="fu">bind_rows</span>(<span class="fu">Psa_summary</span>(psa_result_base,<span class="st">"psa_base"</span>), <span class="fu">Psa_summary</span>(psa_result_100,<span class="st">"psa_100"</span>), <span class="fu">Psa_summary</span>(psa_result_500, <span class="st">"psa_500"</span>),</span>
-<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Psa_summary</span>(psa_result_1000,<span class="st">"psa_1000"</span>), <span class="fu">Psa_summary</span>(psa_result_dr_0, <span class="st">"discount 0"</span>), <span class="fu">Psa_summary</span>(psa_result_dr_3, <span class="st">"discount 3%"</span>),</span>
-<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Psa_summary</span>(psa_result_societal,<span class="st">"psa_societal"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Psa_summary<span class="ot">&lt;-</span><span class="cf">function</span>(dr,scenario_name) {</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span>dr<span class="sc">$</span>psa</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span>a<span class="sc">%&gt;%</span> <span class="fu">group_by</span>(.index) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">cost_diff =</span> .cost<span class="sc">-</span> <span class="fu">lag</span>(.cost)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Qaly_diff =</span> .effect<span class="sc">-</span> <span class="fu">lag</span>(.effect))<span class="sc">%&gt;%</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">INMB =</span>Qaly_diff<span class="sc">/</span><span class="dv">10000</span> <span class="sc">*</span><span class="dv">100000</span><span class="sc">-</span>cost_diff<span class="sc">/</span><span class="dv">10000</span> )</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  mean_cost<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(b<span class="sc">$</span>cost_diff,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  mean_utility<span class="ot">&lt;-</span><span class="fu">signif</span>(<span class="fu">mean</span>(b<span class="sc">$</span>Qaly_diff,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  INMB_result<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(b<span class="sc">$</span>INMB,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>)</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  cost_ED<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.cost[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"ED_transfer"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  cost_watch<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.cost[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"watch_wait"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  utility_ED<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.effect[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"ED_transfer"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a> utility_watch<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">mean</span>(a<span class="sc">$</span>.effect[a<span class="sc">$</span>.strategy_names<span class="sc">==</span><span class="st">"watch_wait"</span>])<span class="sc">/</span><span class="dv">10000</span>,<span class="dv">4</span>)</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>  c<span class="ot">&lt;-</span><span class="fu">data.frame</span>(</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Scenrio =</span> scenario_name,</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">watch_cost =</span> cost_watch,</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">ED_cost =</span> cost_ED,</span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">QALY_ED =</span> utility_ED,</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">QAlY_watch =</span> utility_watch,</span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">Increment_cost =</span> mean_cost,</span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">Increment_utility=</span> mean_utility,</span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">ICER=</span> mean_cost<span class="sc">/</span>mean_utility,</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">INMB =</span> INMB_result)</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(c)</span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_100"</span>)</span>
+<span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_500"</span>)</span>
+<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_1000"</span>)</span>
+<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_dr_0"</span>)</span>
+<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_dr_3"</span>)</span>
+<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"psa_result_societal"</span>)</span>
+<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a>PSA_result_summary<span class="ot">&lt;-</span><span class="fu">bind_rows</span>(<span class="fu">Psa_summary</span>(psa_result_base,<span class="st">"psa_base"</span>), <span class="fu">Psa_summary</span>(psa_result_100,<span class="st">"psa_100"</span>), <span class="fu">Psa_summary</span>(psa_result_500, <span class="st">"psa_500"</span>),</span>
+<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Psa_summary</span>(psa_result_1000,<span class="st">"psa_1000"</span>), <span class="fu">Psa_summary</span>(psa_result_dr_0, <span class="st">"discount 0"</span>), <span class="fu">Psa_summary</span>(psa_result_dr_3, <span class="st">"discount 3%"</span>),</span>
+<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Psa_summary</span>(psa_result_societal,<span class="st">"psa_societal"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Scenrio watch_cost ED_cost QALY_ED QAlY_watch Increment_cost
 1 psa_base   20572.64 21725.3 15.8843    15.8836      -1152.669
@@ -1513,7 +1481,7 @@ Adding another scale for x, which will replace the existing scale.</code></pre>
   Increment_utility    ICER     INMB
 1        -0.0007297 1887807 1304.562</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(PSA_result_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(PSA_result_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       Scenrio watch_cost    ED_cost QALY_ED QAlY_watch Increment_cost
 1     psa_base  20572.635  21725.304 15.8843    15.8836      -1152.669

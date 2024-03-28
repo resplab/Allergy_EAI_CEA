@@ -691,7 +691,7 @@ allergy_sa<-define_dsa(
   p_sh_ED,                0.001684833*0.8,       0.001684833*1.2,
   treatment_cost_ED,      0.8,                   95,
   treatment_cost_ww,      95*0.8,                95*1.2,
-  treatment_cost_ww_ED,   0.8*0.8,               0.8*1.2,
+  treatment_cost_ww_ED,   0.8,                   95,
   remission_cost_all,     569/365*0.8,           569/365*1.2,
   medical_cost_ns,        1388/365 *0.8,         1388/365*1.2,
   ambulance_cost_ED_ED,   848*0.8,               848*1.2,
@@ -742,12 +742,12 @@ tornado_plot <- function(df, refer_value){
   df$UL_Difference <- abs(df$Upper_Bound - df$Lower_Bound)
   base.value <- refer_value
   
-  dsa_names<-c("Ambulance cost (+/-20%)", "Medical cost - ED (+/-20%)","Medical cost - Hospitalization (+/-20%)","Daily medical cost - Non-severe reaction (+/-20%)", 
-    "Annual probability - Remission (+/-20%)","Annual probability - Severe allergy reaction (+/-20%)", "Probability - Hospitalization after severe reaction (+/-20%)",
-    "Fatality in hospitalized patient (+/-20%)","Daily cost - Food allergy remission (+/-20%)",
-    "Epinephrine cost in ED state - Immediate ED transfer scenario ($0.8, $95)", "Epinephrine cost in watchful waiting state (+/-20%)", 
-    "Epinephrine cost in ED state - Watchful waiting scenario (+/-20%)", 
-               "Utility - Non-severe food allergy (+/-20%)", "Utility - Food allergy remission (+/-20%)", "Disutility - Severe allergy reaction (+/-20%)"
+  dsa_names<-c("Ambulance cost (+/-20%)", "Medical cost - ED (+/-20%)","Medical cost - Hospitalization (+/-20%)","Medical cost - Food allergy (+/-20%)", 
+    "Annual probability - Food allergy remission (+/-20%)","Annual probability - Severe allergy reaction (+/-20%)", "Probability - Hospitalization post-ED visit (+/-20%)",
+    "Food allergy fatality in hospitalized patients (+/-20%)","Medical cost - Food allergy remission (+/-20%)",
+    "Epinephrine cost in ED state - Immediate ED transfer strategy ($0.8, $95)", "Epinephrine auto injector cost in watchful waiting state (+/-20%)", 
+    "Epinephrine cost in ED state - Watchful waiting strategy ($0.8, $95)", 
+               "Utility - Food allergy (+/-20%)", "Utility - Food allergy remission (+/-20%)", "Disutility - Severe allergy reaction (+/-20%)"
   )
   
  
@@ -779,7 +779,7 @@ tornado_plot <- function(df, refer_value){
               aes(ymax=ymax, ymin=ymin, xmax=xmax, xmin=xmin, fill=type)) +
     theme_bw() +
     theme(axis.title.y=element_blank(), legend.position = 'bottom',
-          legend.title = element_blank()) + 
+          legend.title = element_blank(),text=element_text(size=15)) + 
     geom_hline(yintercept = base.value) +
     scale_x_continuous(breaks = c(1:length(order.parameters)), 
                        labels = order.parameters) +
@@ -798,7 +798,7 @@ print(DSA_tornado)
 
 ## PSA analysis
 
-```{psa_base<-define_psa(}
+```{r} psa_base<-define_psa(
   p_severe ~ beta(66.3345,696.1314),
   p_ns_ar_original ~ beta(47.4951,771.3863),
   p_biphas ~ beta(183.5019,3805.6703),
@@ -837,7 +837,6 @@ psa_result_1000<-run_psa(allergy_mod_1000 ,psa_base, N= 1000)
 psa_result_dr_0<-run_psa(allergy_mod_dr_0 ,psa_base, N= 1000)
 
 psa_result_dr_3<-run_psa(allergy_mod_dr_3 ,psa_base, N= 1000)
-
 
 
 
