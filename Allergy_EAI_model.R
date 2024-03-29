@@ -549,20 +549,10 @@ allergy_mod_dr_3<-run_model(
 ## Build output table
 
 value_10<-get_values(allergy_mod_10)
-value_100<-get_values(allergy_mod_100)
-value_500<-get_values(allergy_mod_500)
-value_1000<-get_values(allergy_mod_1000)
-value_10_societal<-get_values(allergy_mod_10_societal)
-value_dr_0<-get_values(allergy_mod_dr_0)
-value_dr_3<-get_values(allergy_mod_dr_3)
+
 
 counts_10<-get_counts(allergy_mod_10)
-counts_100<-get_counts(allergy_mod_100)
-counts_500<-get_counts(allergy_mod_500)
-counts_1000<-get_counts(allergy_mod_1000)
-counts_10_societal<-get_counts(allergy_mod_10_societal)
-counts_dr_0<-get_counts(allergy_mod_dr_0)
-counts_dr_3<-get_counts(allergy_mod_dr_3)
+
 
 
 
@@ -590,23 +580,17 @@ merge(a,b, by = ".strategy_names" ) %>%
 
 
 value_table_10<-valuetable(value_10,counts_10, "X10_mortality_in_ww")
-value_table_100<-valuetable(value_100,counts_100,"X100_mortality_in_ww")
-value_table_500<-valuetable(value_500,counts_500,"X500_mortality_in_ww")
-value_table_1000<-valuetable(value_1000, counts_1000,"X1000_mortality_in_ww")
-value_table_10_societal<-valuetable(value_10_societal,counts_10_societal,"X10_mortality_in_ww_societal")
-value_table_dr_0<-valuetable(value_dr_0,counts_dr_0, "discount 0%")
-value_table_dr_3<-valuetable(value_dr_3,counts_dr_0, "discount 3%")
+
 
 #INMB calculation
 
 INMB<-value_table_10 %>% 
-  mutate(INMB_result = Qaly_diff* 100000-cost_diff )
+  mutate(INMB_result = Qaly_diff* 50000-cost_diff )
 
 print(INMB)
 
 #Build the final table to compare the cost_per_lifesaved with different mortality
-final_Table<-bind_rows(value_table_10,value_table_100,value_table_500,value_table_1000,value_table_dr_0,value_table_dr_3)  
-final_Table<-final_Table %>% mutate_if(is.numeric, as.character) 
+final_Table<-value_table_10 %>% mutate_if(is.numeric, as.character) 
 final_Table <-replace(final_Table, is.na(final_Table),"reference") 
 
 final_Table<-final_Table %>% rename(
@@ -620,25 +604,10 @@ final_Table<-final_Table %>% rename(
 
 
 
-#Build the final table to compare the cost_per_lifesaved between base and societal model 
-final_Table_societal<-bind_rows(value_table_10,value_table_10_societal)  
-final_Table_societal<-final_Table_societal %>% mutate_if(is.numeric, as.character) 
-final_Table_societal <-replace(final_Table_societal, is.na(final_Table_societal),"reference") 
-
-
-final_Table_societal<-final_Table_societal %>% rename(
-  "strategy_name"= ".strategy_names",
-  "QALYs_total" = "utility_total",
-  "increment_cost" = "cost_diff",
-  "increment_Qaly" = "Qaly_diff",
-  "increment_cost_per_life_saved" = "cost_per_life_saved"
-  
-)
 
 #final summary table for different fatality scenario
 
 print(as.data.frame(final_Table))
-print(as.data.frame (final_Table_societal))
 
 
 
