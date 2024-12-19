@@ -704,18 +704,20 @@ tornado_plot <- function(df, refer_value){
               aes(ymax=ymax, ymin=ymin, xmax=xmax, xmin=xmin, fill=type)) +
     theme_bw() +
     theme(axis.title.y=element_blank(), legend.position = 'bottom',
-          legend.title = element_blank(),text=element_text(size=15)) + 
+          legend.title = element_blank(),text=element_text(size=11)) + 
     geom_hline(yintercept = base.value) +
     scale_x_continuous(breaks = c(1:length(order.parameters)), 
                        labels = order.parameters) +
-    coord_flip() + labs(y="Incremental cost per QALY saved")
+    coord_flip() + labs(y="Incremental cost per QALY saved ($/QALY)") + 
+    labs(caption="Figure 2.") + 
+    theme(plot.caption = element_text(hjust=0.5, size=rel(1.2)))
   
   
   list(df,p)
 }
 
 #tornado_plot for the model
-DSA_tornado<-tornado_plot(allergy_dsa$dsa, cost_per_year_QALY_saved_ref) 
+DSA_tornado<-tornado_plot(allergy_dsa$dsa, cost_per_year_QALY_saved_ref)
 
 print(DSA_tornado)
 
@@ -843,12 +845,15 @@ CEA_plot <- function(data,
     geom_hline(yintercept = 0)+
     geom_vline(xintercept = 0)+
     geom_abline(intercept = 0, slope = 50000,linetype = 2)+
-    annotate("text", x = -0.0006, y = -250, label = "WTP = $50,000", size = 8, color = "black") +
+    annotate("text", x = -0.0006, y = -200, label = "WTP = $50,000/QALY", size = 8, color = "black") + 
+    
     theme_bw(base_size = 18) + theme(panel.border = element_blank(),
                        # panel.grid.major = element_blank(),
                        # panel.grid.minor = element_blank(), 
-                       axis.line = element_line(colour = "black") 
-    )
+                       axis.line = element_line(colour = "black")
+                      
+    ) +labs(caption="Figure 3.")+ 
+    theme(plot.caption = element_text(hjust=0.5, size=rel(1.2))) 
   
   return(p)
 }
